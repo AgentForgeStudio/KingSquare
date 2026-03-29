@@ -2,9 +2,10 @@
 
 import { ReactNode } from 'react';
 import { LenisProvider } from './LenisProvider';
-import { ScrollProgress } from './ScrollProgress';
 import { Navbar } from '../layout/Navbar';
-import { Footer } from '../layout/Footer';
+
+
+import Footer from '../layout/Footer';
 import { ChatWidget } from '../chatbot/ChatWidget';
 import { CallOptionsModal } from '../calling/CallOptionsModal';
 import { ScheduleMeetingModal } from '../calling/ScheduleMeetingModal';
@@ -18,8 +19,7 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <LenisProvider>
-      <ScrollProgress />
-      <Navbar />
+<Navbar/>
       <main>{children}</main>
       <Footer />
       <ChatWidget />

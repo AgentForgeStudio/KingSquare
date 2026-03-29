@@ -5,6 +5,7 @@ import { Testimonials } from "@/components/home/Testimonials";
 import { NeighborhoodMap } from "@/components/home/NeighborhoodMap";
 import { CTABanner } from "@/components/home/CTABanner";
 import { ProcessSection } from "@/components/home/ProcessSection";
+import { Footersection } from "@/components/footer-section";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <NeighborhoodMap />
       <Testimonials />
       <CTABanner />
+      <Footersection />
     </>
   );
 }

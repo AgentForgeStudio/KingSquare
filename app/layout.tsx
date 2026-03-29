@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Playfair_Display, Geist } from "next/font/google";
 import "./globals.css";
 import { AppProviders } from "@/components/common/AppProviders";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="min-h-screen bg-white dark:bg-neutral-950 antialiased font-sans">
+    <html lang="en" className={cn(inter.variable, playfair.variable, "font-sans", geist.variable, "dark")}>
+      <body className="min-h-screen bg-[#070707] text-neutral-50 antialiased font-sans selection:bg-gold-500/30 selection:text-gold-100">
         <AppProviders>
           {children}
         </AppProviders>
