@@ -1,23 +1,23 @@
 import LandingPage from "@/components/LandingPage";
-import { FeaturedProperties } from "@/components/home/FeaturedProperties";
-import { StatsCounter } from "@/components/home/StatsCounter";
-import { Testimonials } from "@/components/home/Testimonials";
+// import { FeaturedProperties } from "@/components/home/FeaturedProperties";
+// import { Testimonials } from "@/components/home/Testimonials";
 import { NeighborhoodMap } from "@/components/home/NeighborhoodMap";
 import { CTABanner } from "@/components/home/CTABanner";
-import { ProcessSection } from "@/components/home/ProcessSection";
-import { Footersection } from "@/components/footer-section";
-
+// import { Footersection } from "@/components/footer-section";
+// import { Navbar } from "@/components/layout/Navbar";
+// import Menu
 export default function Home() {
   return (
     <>
-      <LandingPage />
+    {/* <Navbar/> */}
+  
+      <LandingPage/>
       {/* <FeaturedProperties /> */}
-      <StatsCounter />
-      <ProcessSection />
+     
       <NeighborhoodMap />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <CTABanner />
-      <Footersection />
+      {/* <Footersection /> */}
     </>
   );
 }

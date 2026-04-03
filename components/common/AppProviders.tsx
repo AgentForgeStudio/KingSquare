@@ -2,7 +2,6 @@
 
 import { ReactNode } from 'react';
 import { LenisProvider } from './LenisProvider';
-import { Navbar } from '../layout/Navbar';
 
 
 import Footer from '../layout/Footer';
@@ -19,7 +18,7 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <LenisProvider>
-<Navbar/>
+{/* <Navbar/> */}
       <main>{children}</main>
       <Footer />
       <ChatWidget />

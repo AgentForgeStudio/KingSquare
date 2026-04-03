@@ -5,116 +5,239 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, MapPin, Bed, Bath, Square } from 'lucide-react';
 import { getFeaturedProperties } from '@/data/properties';
-import { formatPrice } from '@/lib/utils';
+
+// ─── Easing ────────────────────────────────────────────────────────────────────
+
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+// ─── Animation variants ────────────────────────────────────────────────────────
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 36 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, delay, ease: EASE },
+  }),
+};
+
+const fadeLeft = {
+  hidden: { opacity: 0, x: -24 },
+  visible: (delay = 0) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.75, delay, ease: EASE },
+  }),
+};
+
+const lineGrow = {
+  hidden: { scaleX: 0 },
+  visible: (delay = 0) => ({
+    scaleX: 1,
+    transition: { duration: 0.7, delay, ease: EASE },
+  }),
+};
+
+// ─── Property Card ─────────────────────────────────────────────────────────────
+
+function PropertyCard({
+  property,
+  index,
+}: {
+  property: ReturnType<typeof getFeaturedProperties>[number];
+  index: number;
+}) {
+  return (
+    <motion.div
+      custom={index * 0.12}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-60px' }}
+      variants={fadeUp}
+      className="group relative"
+    >
+      <Link href={`/properties/${property.slug}`} className="block">
+        {/* Image */}
+        <div className="relative overflow-hidden bg-neutral-100 dark:bg-neutral-900 aspect-[4/3]">
+          <Image
+            src={property.images[0]}
+            alt={property.title}
+            fill
+            className="object-cover transition-transform duration-[900ms] group-hover:scale-[1.08]"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+          {/* Badges */}
+          <div className="absolute top-4 left-4 flex gap-2">
+            {property.featured && (
+              <span className="px-3 py-1 bg-[#c8a96e] text-white text-[10px] font-semibold tracking-[0.12em] uppercase">
+                Featured
+              </span>
+            )}
+            <span
+              className={`px-3 py-1 text-white text-[10px] font-semibold tracking-[0.12em] uppercase ${
+                property.status === 'for-sale' ? 'bg-emerald-600' : 'bg-blue-600'
+              }`}
+            >
+              {property.status === 'for-sale' ? 'For Sale' : 'For Rent'}
+            </span>
+          </div>
+
+          {/* Hover CTA */}
+          <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-[#0a0a0a] text-[11px] font-semibold tracking-[0.1em] uppercase">
+              View <ArrowRight className="w-3 h-3" />
+            </span>
+          </div>
+        </div>
+
+        {/* Card body */}
+        <div className="pt-5 pb-6">
+          {/* Accent line */}
+          <div className="relative h-[1px] bg-neutral-200 dark:bg-neutral-800 mb-5 overflow-hidden">
+            <motion.div
+              className="absolute inset-y-0 left-0 bg-[#c8a96e]"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 0.35 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: index * 0.12 + 0.4, ease: EASE }}
+              style={{ transformOrigin: 'left', width: '100%' }}
+            />
+          </div>
+
+          <h3
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            className="text-lg font-bold leading-[1.2] text-neutral-900 dark:text-white group-hover:text-[#c8a96e] transition-colors duration-300 mb-2 tracking-[-0.01em]"
+          >
+            {property.title}
+          </h3>
+
+          <div className="flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 text-[11px] tracking-[0.1em] uppercase mb-4">
+            <MapPin className="w-3 h-3 shrink-0" />
+            <span>{property.neighborhood}, {property.city}</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px] tracking-[0.08em] uppercase text-neutral-500 dark:text-neutral-400 mb-5">
+            <span className="flex items-center gap-1.5"><Bed className="w-3.5 h-3.5" />{property.beds}</span>
+            <span className="text-neutral-300 dark:text-neutral-700">·</span>
+            <span className="flex items-center gap-1.5"><Bath className="w-3.5 h-3.5" />{property.baths}</span>
+            <span className="text-neutral-300 dark:text-neutral-700">·</span>
+            <span className="flex items-center gap-1.5"><Square className="w-3.5 h-3.5" />{property.sqft.toLocaleString()}</span>
+          </div>
+
+          <div className="flex items-end justify-between">
+            <p
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-2xl font-bold text-[#c8a96e] leading-none"
+            >
+              {property.priceLabel}
+            </p>
+            <span className="text-[10px] tracking-[0.14em] uppercase text-neutral-400 dark:text-neutral-500 capitalize">
+              {property.type}
+            </span>
+          </div>
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+// ─── Main component ────────────────────────────────────────────────────────────
 
 export function FeaturedProperties() {
   const featuredProperties = getFeaturedProperties().slice(0, 4);
 
   return (
-    <section className="py-24 bg-white dark:bg-neutral-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="text-amber-500 font-medium tracking-wider uppercase text-sm">
-            Curated Selection
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-3 mb-5 text-neutral-900 dark:text-white font-serif tracking-tight">
-            Featured Properties
-          </h2>
-          <p className="text-neutral-500 dark:text-neutral-400 max-w-2xl mx-auto text-lg">
-            Hand-picked luxury properties from our exclusive portfolio
-          </p>
-        </motion.div>
+    <section className="py-28 md:py-36 bg-[#fafaf8] dark:bg-neutral-950 overflow-hidden">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap');`}</style>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProperties.map((property, i) => (
-            <motion.div
-              key={property.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+
+        {/* Header */}
+        <div className="mb-20">
+          <div className="flex items-center gap-5 mb-6">
+            <motion.span
+              custom={0}
+              initial="hidden"
+              whileInView="visible"
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group"
+              variants={fadeLeft}
+              className="text-[11px] tracking-[0.22em] uppercase text-neutral-400 dark:text-neutral-500"
             >
-              <Link href={`/properties/${property.slug}`}>
-                <div className="relative overflow-hidden rounded-2xl bg-neutral-50 dark:bg-neutral-900 shadow-md hover:shadow-2xl transition-all duration-300">
-                  <div className="relative h-56 overflow-hidden">
-                    <Image
-                      src={property.images[0]}
-                      alt={property.title}
-                      fill
-                      className={`object-cover transition-transform duration-700 ${
-                        'group-hover:scale-110'
-                      }`}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    
-                    <div className="absolute top-3 left-3 flex gap-2">
-                      {property.featured && (
-                        <span className="px-2.5 py-1 bg-amber-500 text-white text-xs font-semibold rounded-full">
-                          Featured
-                        </span>
-                      )}
-                      <span className={`px-2.5 py-1 text-white text-xs font-semibold rounded-full ${
-                        property.status === 'for-sale' ? 'bg-emerald-500' : 'bg-blue-500'
-                      }`}>
-                        {property.status === 'for-sale' ? 'For Sale' : 'For Rent'}
-                      </span>
-                    </div>
+              Curated Selection
+            </motion.span>
+            <motion.div
+              custom={0.1}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={lineGrow}
+              className="h-[1px] w-16 bg-[#c8a96e] origin-left"
+            />
+          </div>
 
-                    <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="px-3 py-1.5 bg-white/95 text-neutral-900 text-xs font-semibold rounded-full flex items-center gap-1.5">
-                        View <ArrowRight className="w-3 h-3" />
-                      </span>
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-6 items-end">
+            <motion.h2
+              custom={0.15}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+              className="text-5xl sm:text-6xl md:text-7xl font-bold leading-[0.95] tracking-[-0.025em] text-neutral-900 dark:text-white"
+            >
+              Featured
+              <br />
+              <em className="font-normal not-italic text-neutral-400 dark:text-neutral-500">Properties</em>
+            </motion.h2>
 
-                  <div className="p-4">
-                    <h3 className="text-base font-semibold text-neutral-900 dark:text-white group-hover:text-amber-500 transition-colors mb-1.5">
-                      {property.title}
-                    </h3>
-                    <div className="flex items-center gap-1 text-neutral-500 text-xs mb-3">
-                      <MapPin className="w-3 h-3" />
-                      <span>{property.neighborhood}, {property.city}</span>
-                    </div>
+            <motion.p
+              custom={0.28}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={fadeUp}
+              className="text-sm text-neutral-500 dark:text-neutral-400 max-w-[240px] leading-relaxed lg:text-right"
+            >
+              Hand-picked luxury properties from our exclusive portfolio
+            </motion.p>
+          </div>
+        </div>
 
-                    <div className="flex items-center gap-3 text-xs text-neutral-600 dark:text-neutral-400 mb-3">
-                      <span className="flex items-center gap-1"><Bed className="w-3 h-3" />{property.beds}</span>
-                      <span className="flex items-center gap-1"><Bath className="w-3 h-3" />{property.baths}</span>
-                      <span className="flex items-center gap-1"><Square className="w-3 h-3" />{property.sqft.toLocaleString()}</span>
-                    </div>
-
-                    <div className="pt-3 border-t border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
-                      <p className="text-lg font-bold text-amber-500">{property.priceLabel}</p>
-                      <span className="text-xs text-neutral-400 capitalize">{property.type}</span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+          {featuredProperties.map((property, i) => (
+            <PropertyCard key={property.id} property={property} index={i} />
           ))}
         </div>
 
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          custom={0.5}
+          initial="hidden"
+          whileInView="visible"
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-12"
+          variants={fadeUp}
+          className="mt-20 flex items-center justify-between border-t border-neutral-200 dark:border-neutral-800 pt-10"
         >
-          <Link href="/properties">
-            <button className="inline-flex items-center gap-2 px-8 py-3.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-full font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-colors">
+          <p
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+            className="text-neutral-400 dark:text-neutral-500 italic text-base hidden sm:block"
+          >
+            Showing 4 of {getFeaturedProperties().length} curated listings
+          </p>
+          <Link href="/properties" className="group ml-auto">
+            <span className="flex items-center gap-3 text-[11px] tracking-[0.18em] uppercase font-semibold text-neutral-900 dark:text-white">
               View All Properties
-              <ArrowRight className="w-4 h-4" />
-            </button>
+              <span className="relative flex items-center justify-center w-10 h-10 border border-neutral-900 dark:border-white overflow-hidden">
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-5 group-hover:opacity-0" />
+                <ArrowRight className="w-4 h-4 absolute -translate-x-5 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
+              </span>
+            </span>
           </Link>
         </motion.div>
+
       </div>
     </section>
   );

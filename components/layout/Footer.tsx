@@ -2,10 +2,7 @@ import { Footersection } from '@/components/footer-section';
 
 export default function Footer() {
 	return (
-		<div className="relative flex min-h-svh flex-col">
-			<div className="min-h-screen flex items-center justify-center">
-				<h1 className='font-mono text-2xl font-bold'>Scrool Down!</h1>
-			</div>
+		<div className="relative bg-[rgb(11,11,9)] mt-10 flex justify-center items-end min-h-screen pb-6">
 			<Footersection />
 		</div>
 	);

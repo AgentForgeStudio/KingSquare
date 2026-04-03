@@ -26,7 +26,7 @@ export default function AboutPage() {
 
   return (
     <>
-      <style>{`
+      <style jsx>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
 
         :root {
@@ -545,7 +545,8 @@ export default function AboutPage() {
           .values, .team, .manifesto { padding: 6rem 5vw; }
           .cta-section { padding: 8rem 5vw; }
         }
-      `}</style>
+      `}
+      </style>
 
       <div className="about-page">
 

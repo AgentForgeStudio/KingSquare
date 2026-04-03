@@ -38,8 +38,7 @@ export function PropertyCard({ property, index = 0 }: PropertyCardProps) {
               }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            
+<div className="absolute inset-0  from-transparent via-white/60 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />            
             <div className="absolute top-4 left-4 flex gap-2">
               {property.featured && (
                 <span className="px-3 py-1 bg-amber-500 text-white text-xs font-medium rounded-full">
