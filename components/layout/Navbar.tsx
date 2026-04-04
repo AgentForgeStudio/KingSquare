@@ -300,8 +300,8 @@ export function Navbar() {
             src="./rm.png"
             alt="Logo"
             style={{
-              height: 48,           /* ← bigger */
-              width: 'auto',
+              height: 128,           /* ← bigger */
+              width: 120,
               objectFit: 'contain',
               filter: 'drop-shadow(0 2px 12px rgba(0,0,0,0.6))',  /* keeps it visible on any bg */
             }}
