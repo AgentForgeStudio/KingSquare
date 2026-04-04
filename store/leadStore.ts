@@ -28,10 +28,13 @@ export const useLeadStore = create<LeadState>()(
         set((state) => {
           const capturedAt = new Date().toISOString();
           if (typeof window !== 'undefined') {
+            const payload = JSON.stringify({ phone, source, capturedAt });
             localStorage.setItem(
-              'luxe_phone_captured',
-              JSON.stringify({ phone, source, capturedAt })
+              'kingsquare_phone_captured',
+              payload
             );
+            // Backward compatibility for existing clients.
+            localStorage.setItem('luxe_phone_captured', payload);
           }
           return {
             ...state,
@@ -45,7 +48,7 @@ export const useLeadStore = create<LeadState>()(
       reset: () => set(initialState),
     }),
     {
-      name: 'luxe-lead-store',
+      name: 'kingsquare-lead-store',
     }
   )
 );

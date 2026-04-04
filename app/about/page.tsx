@@ -105,7 +105,7 @@ const MILESTONES = [
   { year: '2009', title: 'Founded', description: 'FIND was born in Mumbai with a vision to redefine luxury real estate through trust and precision.' },
   { year: '2013', title: 'First 1000 Deals', description: 'Reached our first thousand closed transactions, establishing ourselves as Mumbai\'s go-to luxury agency.' },
   { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted agents.' },
-  { year: '2020', title: 'LUXE AI Launch', description: 'Launched India\'s first AI-powered property concierge, transforming how clients discover their dream homes.' },
+  { year: '2020', title: 'KingSquare AI Launch', description: 'Launched India\'s first AI-powered property concierge, transforming how clients discover their dream homes.' },
   { year: '2024', title: '10,000 Families Housed', description: 'Celebrated our ten-thousandth successful transaction — a milestone built on relationships, not transactions.' },
 ];
 

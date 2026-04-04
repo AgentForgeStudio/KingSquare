@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Phone, Mail, ArrowRight, X, Sparkles } from 'lucide-react';
 import { useState, useRef } from 'react';
 import Link from 'next/link';
+import { useCallStore } from '@/store/callStore';
 
 // ─── Shared constants ──────────────────────────────────────────────────────────
 const GOLD = '#c8a96e';
@@ -130,6 +131,8 @@ export function CTABanner({ openCallOptions, openScheduleModal }: CTABannerProps
   const wmY = useTransform(scrollYProgress, [0, 1], [60, -60]);
   const [callHov, setCallHov] = useState(false);
   const [mailHov, setMailHov] = useState(false);
+  const storeOpenCallOptions = useCallStore((state) => state.openCallOptions);
+  const storeOpenScheduleModal = useCallStore((state) => state.openScheduleModal);
 
   return (
     <>
@@ -214,7 +217,7 @@ export function CTABanner({ openCallOptions, openScheduleModal }: CTABannerProps
           >
             {/* Primary — solid gold */}
             <button
-              onClick={openCallOptions}
+              onClick={() => (openCallOptions ?? storeOpenCallOptions)()}
               onMouseEnter={() => setCallHov(true)}
               onMouseLeave={() => setCallHov(false)}
               style={{
@@ -235,7 +238,7 @@ export function CTABanner({ openCallOptions, openScheduleModal }: CTABannerProps
 
             {/* Secondary — outlined */}
             <button
-              onClick={openScheduleModal}
+              onClick={() => (openScheduleModal ?? storeOpenScheduleModal)()}
               onMouseEnter={() => setMailHov(true)}
               onMouseLeave={() => setMailHov(false)}
               style={{

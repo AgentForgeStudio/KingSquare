@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
-import { useCallStore } from '@/store/callStore';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Vapi from '@vapi-ai/web';
 
 type CallStatus = 'idle' | 'connecting' | 'active' | 'ended' | 'error';
 
@@ -9,6 +9,18 @@ interface UseVapiOptions {
   onCallStart?: () => void;
   onCallEnd?: () => void;
   onError?: (error: string) => void;
+}
+
+function toErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return String((error as { message?: string }).message ?? 'Unknown Vapi error');
+  }
+
+  return 'Failed to start call';
 }
 
 export function useVapi(options: UseVapiOptions = {}) {
@@ -22,6 +34,23 @@ export function useVapi(options: UseVapiOptions = {}) {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const vapiRef = useRef<Vapi | null>(null);
+  const hasEndedRef = useRef(false);
+
+  const stopTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const cleanupCall = useCallback(() => {
+    stopTimer();
+    vapiRef.current?.removeAllListeners();
+    vapiRef.current = null;
+    setVolumeLevel(0);
+    setIsMuted(false);
+  }, [stopTimer]);
 
   const startCall = useCallback(async () => {
     setStatus('connecting');
@@ -29,64 +58,129 @@ export function useVapi(options: UseVapiOptions = {}) {
 
     try {
       const publicKey = process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY;
+      const assistantId = process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID;
+
       if (!publicKey) {
-        throw new Error('VAPI public key not configured');
+        throw new Error('Vapi public key is missing. Set NEXT_PUBLIC_VAPI_PUBLIC_KEY.');
       }
 
-      const assistantConfig = {
-        name: 'LUXE Estate Agent',
-        firstMessage:
-          "Hello! Thank you for calling LUXE Estates. I'm your AI property consultant. May I have your name please?",
-        transcriber: { provider: 'deepgram' as const, model: 'nova-2' as const, language: 'en-US' },
-        voice: { provider: '11labs' as const, voiceId: 'rachel' },
-        model: {
-          provider: 'openai' as const,
-          model: 'gpt-4o',
-          systemPrompt:
-            "You are a professional luxury real estate agent for LUXE Estates. Be warm, professional, concise — this is a voice call, no markdown. Ask qualifying questions: budget range, preferred location, property type, timeline. IMPORTANT: Within the first 2 minutes naturally ask for their phone number for follow-up: 'Could I get your mobile number so we can send you matching properties?' Store the number mentally and repeat it back to confirm. Keep responses under 3 sentences.",
-        },
-      };
+      const vapi = new Vapi(publicKey);
+      vapiRef.current = vapi;
+      hasEndedRef.current = false;
 
-      console.log('VAPI call would start with config:', assistantConfig);
-
-      setTimeout(() => {
+      vapi.on('call-start', () => {
         setStatus('active');
         startTimeRef.current = Date.now();
-        
+        stopTimer();
+
         timerRef.current = setInterval(() => {
           setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000));
         }, 1000);
 
         onCallStart?.();
-      }, 2000);
+      });
+
+      vapi.on('call-end', () => {
+        if (hasEndedRef.current) return;
+        hasEndedRef.current = true;
+        setStatus('ended');
+        cleanupCall();
+        onCallEnd?.();
+      });
+
+      vapi.on('volume-level', (volume) => {
+        setVolumeLevel(volume);
+      });
+
+      vapi.on('error', (eventError) => {
+        const message = toErrorMessage(eventError);
+        setError(message);
+        setStatus('error');
+        cleanupCall();
+        onError?.(message);
+      });
+
+      if (assistantId) {
+        await vapi.start(assistantId);
+      } else {
+        await vapi.start({
+          name: 'KingSquare Estate Agent',
+          firstMessage:
+            "Hello! Thank you for calling KingSquare. I'm your AI property consultant. May I have your name please?",
+          transcriber: { provider: 'deepgram', model: 'nova-2', language: 'en-US' },
+          voice: { provider: '11labs', voiceId: 'rachel' },
+          model: {
+            provider: 'openai',
+            model: 'gpt-4o',
+            messages: [
+              {
+                role: 'system',
+                content:
+                  "You are a professional luxury real estate agent for KingSquare. Be warm and concise because this is a live voice call. Ask qualifying questions about budget range, preferred location, property type, and timeline. Ask for the caller's mobile number within the first 2 minutes for follow-up and repeat it back for confirmation. Keep replies to 3 sentences maximum.",
+              },
+            ],
+          },
+        });
+      }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to start call';
-      setError(errorMessage);
+      const message = toErrorMessage(err);
+      setError(message);
       setStatus('error');
-      onError?.(errorMessage);
+      cleanupCall();
+      onError?.(message);
     }
-  }, [onCallStart, onError]);
+  }, [cleanupCall, onCallEnd, onCallStart, onError, stopTimer]);
 
   const endCall = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
+    if (hasEndedRef.current) return;
+    hasEndedRef.current = true;
+
+    const current = vapiRef.current;
+    try {
+      current?.end();
+    } catch {
+      // no-op
     }
+
+    // Fallback close path for web sessions where end() is ignored by transport.
+    void current
+      ?.stop()
+      .catch(() => {
+        // no-op
+      });
+
     setStatus('ended');
-    setIsMuted(false);
+    cleanupCall();
     onCallEnd?.();
-  }, [onCallEnd]);
+  }, [cleanupCall, onCallEnd]);
 
   const toggleMute = useCallback(() => {
-    setIsMuted((prev) => !prev);
+    const current = vapiRef.current;
+    if (!current) return;
+
+    setIsMuted((prev) => {
+      const next = !prev;
+      try {
+        current.setMuted(next);
+      } catch {
+        return prev;
+      }
+      return next;
+    });
   }, []);
 
   const reset = useCallback(() => {
+    cleanupCall();
     setStatus('idle');
     setDuration(0);
     setError(null);
-    setIsMuted(false);
-  }, []);
+  }, [cleanupCall]);
+
+  useEffect(() => {
+    return () => {
+      cleanupCall();
+    };
+  }, [cleanupCall]);
 
   return {
     status,

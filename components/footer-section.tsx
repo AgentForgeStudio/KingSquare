@@ -1,8 +1,8 @@
 'use client';
-import React, { ComponentProps, JSX, ReactNode, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import React, { JSX, ReactNode, useState, useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 
-// ── Icons (inline SVGs — no external dep needed) ───────────────
+// ── Icons ──────────────────────────────────────────────────────
 const BuildingIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
     <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 11h1m4 0h1M9 15h1m4 0h1"/>
@@ -37,38 +37,26 @@ const ArrowUpRight = () => (
   </svg>
 );
 
-// ── Token system ───────────────────────────────────────────────
+// ── Tokens ─────────────────────────────────────────────────────
 const C = {
-  bg:          '#080808',
-  surface:     '#0f0f0f',
-  gold:        '#C9A84C',
-  goldDim:     'rgba(201,168,76,0.12)',
-  goldBorder:  'rgba(201,168,76,0.25)',
-  white:       '#F4F1EB',
-  mid:         'rgba(244,241,235,0.38)',
-  dim:         'rgba(244,241,235,0.18)',
-  border:      'rgba(244,241,235,0.07)',
-  borderMid:   'rgba(244,241,235,0.12)',
+  bg:         '#080808',
+  gold:       '#C9A84C',
+  goldDim:    'rgba(201,168,76,0.12)',
+  goldBorder: 'rgba(201,168,76,0.25)',
+  white:      '#F4F1EB',
+  mid:        'rgba(244,241,235,0.38)',
+  dim:        'rgba(244,241,235,0.18)',
+  border:     'rgba(244,241,235,0.07)',
 };
 const serif = "'Cormorant Garamond','Playfair Display',Georgia,serif";
 const sans  = "'Helvetica Neue',Arial,sans-serif";
 
 // ── Data ───────────────────────────────────────────────────────
 const sections = [
-  {
-    label: 'Estates',
-    links: ['Luxury Villas','Penthouses','Private Islands','New Developments'],
-  },
-  {
-    label: 'Company',
-    links: ['About LUXE','Our Agents','Press & Media','Careers'],
-  },
-  {
-    label: 'Support',
-    links: ['Contact Us','Concierge Services','Privacy Policy','Terms of Service'],
-  },
+  { label: 'Estates', links: ['Luxury Villas','Penthouses','Private Islands','New Developments'] },
+  { label: 'Company', links: ['About KingSquare','Our Agents','Press & Media','Careers'] },
+  { label: 'Support', links: ['Contact Us','Concierge Services','Privacy Policy','Terms of Service'] },
 ];
-
 const socials = [
   { label: 'Instagram', Icon: InstagramIcon, href: '#' },
   { label: 'LinkedIn',  Icon: LinkedinIcon,  href: '#' },
@@ -76,21 +64,19 @@ const socials = [
   { label: 'Facebook',  Icon: FacebookIcon,  href: '#' },
 ];
 
-// ── Hover link ─────────────────────────────────────────────────
+// ── FooterLink ─────────────────────────────────────────────────
 function FooterLink({ children }: { children: string }) {
   const [hov, setHov] = useState(false);
   return (
     <li>
-      <a
-        href="#"
+      <a href="#"
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
         style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
           fontFamily: sans, fontSize: 12, letterSpacing: '0.04em',
           color: hov ? C.white : C.mid,
-          textDecoration: 'none',
-          transition: 'color 0.25s ease',
+          textDecoration: 'none', transition: 'color 0.25s ease',
         }}
       >
         <motion.span
@@ -106,15 +92,12 @@ function FooterLink({ children }: { children: string }) {
   );
 }
 
-// ── Social icon button ─────────────────────────────────────────
+// ── SocialBtn ──────────────────────────────────────────────────
 function SocialBtn({ Icon, label, href }: { Icon: () => JSX.Element; label: string; href: string }) {
   const [hov, setHov] = useState(false);
   return (
-    <motion.a
-      href={href}
-      aria-label={label}
-      onHoverStart={() => setHov(true)}
-      onHoverEnd={() => setHov(false)}
+    <motion.a href={href} aria-label={label}
+      onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
       whileTap={{ scale: 0.93 }}
       style={{
         width: 38, height: 38,
@@ -122,9 +105,7 @@ function SocialBtn({ Icon, label, href }: { Icon: () => JSX.Element; label: stri
         border: `1px solid ${hov ? C.goldBorder : C.border}`,
         backgroundColor: hov ? C.goldDim : 'transparent',
         color: hov ? C.gold : C.mid,
-        transition: 'all 0.25s ease',
-        cursor: 'pointer',
-        textDecoration: 'none',
+        transition: 'all 0.25s ease', cursor: 'pointer', textDecoration: 'none',
       }}
     >
       <Icon />
@@ -132,8 +113,8 @@ function SocialBtn({ Icon, label, href }: { Icon: () => JSX.Element; label: stri
   );
 }
 
-// ── AnimatedContainer ──────────────────────────────────────────
-type AnimProps = { delay?: number; className?: string; children: ReactNode; style?: React.CSSProperties };
+// ── Fade-up wrapper (original, unchanged) ──────────────────────
+type AnimProps = { delay?: number; children: ReactNode; style?: React.CSSProperties };
 function A({ delay = 0, children, style }: AnimProps) {
   const reduced = useReducedMotion();
   if (reduced) return <div style={style}>{children}</div>;
@@ -150,145 +131,189 @@ function A({ delay = 0, children, style }: AnimProps) {
   );
 }
 
-// ── Main footer ────────────────────────────────────────────────
+// ── Footer ─────────────────────────────────────────────────────
 export function Footersection() {
+  const footerRef = useRef<HTMLElement>(null);
+
+  // Scroll-driven values
+  const { scrollYProgress } = useScroll({ target: footerRef, offset: ['start end', 'end start'] });
+
+  // Ghost wordmark drifts left as you scroll through the footer
+  const wordmarkX = useTransform(scrollYProgress, [0, 1], [60, -80]);
+
+  // Ambient glow breathes in as footer enters view
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.35], [0, 1]);
+  const glowScale   = useTransform(scrollYProgress, [0, 0.35], [0.6, 1]);
+
+  // Top divider line grows from left on scroll entry
+  const dividerScale = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
+
   return (
-    <footer style={{
-      height:'100%',
-      position: 'relative',
-      width: '100%',
-      backgroundColor: C.bg,
-      overflow: 'hidden',
-      fontFamily: sans,
+    <footer ref={footerRef} style={{
+      position: 'relative', width: '100%',
+      backgroundColor: C.bg, overflow: 'hidden', fontFamily: sans,
     }}>
 
-      {/* ── Cinematic top divider ── */}
+      <style>{`
+        .footer-inner        { max-width:1280px; margin:0 auto; padding:80px 40px 0; }
+        .footer-top-grid     { display:grid; grid-template-columns:1fr 2fr; gap:80px; padding-bottom:72px; border-bottom:1px solid ${C.border}; }
+        .footer-link-cols    { display:grid; grid-template-columns:repeat(3,1fr); gap:32px; }
+        .footer-contact-strip{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; padding:36px 0; border-bottom:1px solid ${C.border}; }
+        .footer-vdivider     { width:1px; height:40px; background-color:${C.border}; flex-shrink:0; }
+        .footer-bottom-bar   { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:24px 0 28px; }
+
+        @media (max-width:900px){
+          .footer-top-grid  { grid-template-columns:1fr!important; gap:48px!important; }
+          .footer-link-cols { grid-template-columns:repeat(3,1fr)!important; gap:24px!important; }
+        }
+        @media (max-width:600px){
+          .footer-inner          { padding:48px 20px 0!important; }
+          .footer-top-grid       { gap:40px!important; padding-bottom:48px!important; }
+          .footer-link-cols      { grid-template-columns:repeat(2,1fr)!important; gap:32px 20px!important; }
+          .footer-contact-strip  { flex-direction:column!important; align-items:flex-start!important; gap:24px!important; padding:32px 0!important; }
+          .footer-vdivider       { display:none!important; }
+          .footer-bottom-bar     { flex-direction:column!important; align-items:flex-start!important; gap:8px!important; padding:20px 0 24px!important; }
+          .footer-contact-cta    { width:100%!important; justify-content:center!important; }
+        }
+        @media (max-width:380px){
+          .footer-link-cols { grid-template-columns:1fr!important; }
+        }
+      `}</style>
+
+      {/* ── Top divider — scroll-driven grow ── */}
       <div style={{ position: 'relative', height: 1, overflow: 'hidden' }}>
         <motion.div
-          initial={{ scaleX: 0 }}
-          whileInView={{ scaleX: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
           style={{
             position: 'absolute', inset: 0, transformOrigin: 'left',
             background: `linear-gradient(90deg, transparent 0%, ${C.gold} 40%, ${C.gold} 60%, transparent 100%)`,
+            scaleX: dividerScale,
           }}
         />
       </div>
 
-      {/* ── Ambient radial glow ── */}
-      <div style={{
+      {/* ── Ambient glow — scroll-driven ── */}
+      <motion.div style={{
         position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
         width: 900, height: 500, pointerEvents: 'none',
         background: 'radial-gradient(ellipse at top, rgba(201,168,76,0.06) 0%, transparent 65%)',
+        opacity: glowOpacity,
+        scale: glowScale,
       }} />
 
-      {/* ── Diagonal grain texture ── */}
+      {/* ── Grain texture (unchanged) ── */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.018,
-        backgroundImage: 'repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)',
+        backgroundImage: 'repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)',
         backgroundSize: '4px 4px',
       }} />
 
-      {/* ── Large ghost wordmark ── */}
-      <div style={{
+      {/* ── Ghost wordmark — parallax drift ── */}
+      <motion.div style={{
         position: 'absolute', bottom: 40, right: -20, pointerEvents: 'none',
-        fontFamily: serif, fontSize: 'clamp(100px, 14vw, 200px)',
+        fontFamily: serif, fontSize: 'clamp(80px,14vw,200px)',
         fontWeight: 300, letterSpacing: '-0.04em', lineHeight: 1,
-        color: 'rgba(201,168,76,0.04)', userSelect: 'none',
-        whiteSpace: 'nowrap',
+        color: 'rgba(201,168,76,0.04)', userSelect: 'none', whiteSpace: 'nowrap',
+        x: wordmarkX,
       }}>
-        LUXE
-      </div>
+        KingSquare
+      </motion.div>
 
-      {/* ── MAIN CONTENT ── */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: '80px 40px 0' }}>
+      {/* ── Main content ── */}
+      <div className="footer-inner">
 
-        {/* Top row: logo block + columns */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 2fr',
-          gap: 80,
-          paddingBottom: 72,
-          borderBottom: `1px solid ${C.border}`,
-        }}>
+        {/* Top row */}
+        <div className="footer-top-grid">
 
-          {/* ── Brand column ── */}
+          {/* Brand column */}
           <A delay={0}>
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-              {/* Logo */}
+            <div style={{ display:'flex', flexDirection:'column', height:'100%', justifyContent:'space-between' }}>
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                {/* Logo */}
+                <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:20 }}>
                   <div style={{
-                    width: 36, height: 36, borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${C.gold}, #8a6320)`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: C.bg, flexShrink: 0,
+                    width:36, height:36, borderRadius:'50%',
+                    background:`linear-gradient(135deg,${C.gold},#8a6320)`,
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    color:C.bg, flexShrink:0,
                   }}>
                     <BuildingIcon />
                   </div>
-                  <span style={{
-                    fontFamily: serif, fontSize: 26, fontWeight: 700,
-                    letterSpacing: '0.12em', color: C.white,
-                  }}>
-                    LUXE<span style={{ color: C.gold }}>.</span>
+                  <span style={{ fontFamily:serif, fontSize:26, fontWeight:700, letterSpacing:'0.12em', color:C.white }}>
+                    KingSquare<span style={{ color:C.gold }}>.</span>
                   </span>
                 </div>
 
                 {/* Tagline */}
                 <p style={{
-                  fontFamily: serif, fontSize: 18, fontStyle: 'italic',
-                  fontWeight: 300, lineHeight: 1.55, color: C.mid,
-                  maxWidth: 280, margin: '0 0 32px',
-                  letterSpacing: '0.01em',
+                  fontFamily:serif, fontSize:18, fontStyle:'italic',
+                  fontWeight:300, lineHeight:1.55, color:C.mid,
+                  maxWidth:280, margin:'0 0 32px', letterSpacing:'0.01em',
                 }}>
                   Curating the world's most extraordinary properties for the most discerning clientele.
                 </p>
 
-                {/* Status pill */}
+                {/* Status pill — pulse animation unchanged, dot now pulses */}
                 <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '6px 14px',
-                  border: `1px solid ${C.goldBorder}`,
-                  backgroundColor: C.goldDim,
+                  display:'inline-flex', alignItems:'center', gap:8,
+                  padding:'6px 14px',
+                  border:`1px solid ${C.goldBorder}`,
+                  backgroundColor:C.goldDim,
                 }}>
-                  <div style={{
-                    width: 6, height: 6, borderRadius: '50%',
-                    backgroundColor: C.gold,
-                    boxShadow: `0 0 6px ${C.gold}`,
-                  }} />
+                  <motion.div
+                    animate={{ opacity:[1,0.3,1], scale:[1,1.3,1] }}
+                    transition={{ duration:2, repeat:Infinity, ease:'easeInOut' }}
+                    style={{
+                      width:6, height:6, borderRadius:'50%',
+                      backgroundColor:C.gold, boxShadow:`0 0 6px ${C.gold}`,
+                    }}
+                  />
                   <span style={{
-                    fontFamily: sans, fontSize: 9, letterSpacing: '0.22em',
-                    textTransform: 'uppercase', color: C.gold, fontWeight: 700,
+                    fontFamily:sans, fontSize:9, letterSpacing:'0.22em',
+                    textTransform:'uppercase', color:C.gold, fontWeight:700,
                   }}>
                     Accepting new clients
                   </span>
                 </div>
               </div>
 
-              {/* Social icons */}
-              <div style={{ display: 'flex', gap: 8, marginTop: 40 }}>
-                {socials.map(s => <SocialBtn key={s.label} {...s} />)}
+              {/* Social icons — staggered slide-up */}
+              <div style={{ display:'flex', gap:8, marginTop:40, flexWrap:'wrap' }}>
+                {socials.map((s, i) => (
+                  <motion.div key={s.label}
+                    initial={{ opacity:0, y:16 }}
+                    whileInView={{ opacity:1, y:0 }}
+                    viewport={{ once:true }}
+                    transition={{ delay:0.3 + i*0.07, duration:0.5, ease:[0.22,1,0.36,1] }}
+                  >
+                    <SocialBtn {...s} />
+                  </motion.div>
+                ))}
               </div>
             </div>
           </A>
 
-          {/* ── Link columns ── */}
-          <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32,
-          }}>
+          {/* Link columns — each link slides in from left with stagger */}
+          <div className="footer-link-cols">
             {sections.map((sec, i) => (
               <A key={sec.label} delay={0.1 + i * 0.08}>
                 <div>
                   <p style={{
-                    fontFamily: sans, fontSize: 9, letterSpacing: '0.26em',
-                    textTransform: 'uppercase', color: C.gold,
-                    fontWeight: 700, margin: '0 0 22px',
+                    fontFamily:sans, fontSize:9, letterSpacing:'0.26em',
+                    textTransform:'uppercase', color:C.gold, fontWeight:700, margin:'0 0 22px',
                   }}>
                     {sec.label}
                   </p>
-                  <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 13 }}>
-                    {sec.links.map(l => <FooterLink key={l}>{l}</FooterLink>)}
+                  <ul style={{ listStyle:'none', margin:0, padding:0, display:'flex', flexDirection:'column', gap:13 }}>
+                    {sec.links.map((l, j) => (
+                      <motion.div key={l}
+                        initial={{ opacity:0, x:-12 }}
+                        whileInView={{ opacity:1, x:0 }}
+                        viewport={{ once:true }}
+                        transition={{ delay:0.18 + i*0.07 + j*0.05, duration:0.45, ease:[0.22,1,0.36,1] }}
+                      >
+                        <FooterLink>{l}</FooterLink>
+                      </motion.div>
+                    ))}
                   </ul>
                 </div>
               </A>
@@ -296,80 +321,45 @@ export function Footersection() {
           </div>
         </div>
 
-        {/* ── Contact strip ── */}
+        {/* Contact strip */}
         <A delay={0.4}>
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: 20,
-            padding: '36px 0',
-            borderBottom: `1px solid ${C.border}`,
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <span style={{
-                fontFamily: sans, fontSize: 9, letterSpacing: '0.22em',
-                textTransform: 'uppercase', color: C.dim, fontWeight: 600,
-              }}>
-                Reach us
-              </span>
-              <a href="mailto:inquiries@luxe.com" style={{
-                fontFamily: serif, fontSize: 20, fontStyle: 'italic',
-                color: C.white, textDecoration: 'none', letterSpacing: '0.01em',
-              }}>
-                inquiries@luxe.com
+          <div className="footer-contact-strip">
+            <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+              <span style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:C.dim, fontWeight:600 }}>Reach us</span>
+              <a href="mailto:inquiries@kingsquare.com" style={{ fontFamily:serif, fontSize:20, fontStyle:'italic', color:C.white, textDecoration:'none', letterSpacing:'0.01em' }}>
+                inquiries@kingsquare.com
               </a>
             </div>
 
-            {/* Vertical divider */}
-            <div style={{ width: 1, height: 40, backgroundColor: C.border, flexShrink: 0 }} />
+            <div className="footer-vdivider" />
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <span style={{
-                fontFamily: sans, fontSize: 9, letterSpacing: '0.22em',
-                textTransform: 'uppercase', color: C.dim, fontWeight: 600,
-              }}>
-                Call us
-              </span>
-              <a href="tel:+919876543210" style={{
-                fontFamily: serif, fontSize: 20, fontStyle: 'italic',
-                color: C.white, textDecoration: 'none',
-              }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+              <span style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:C.dim, fontWeight:600 }}>Call us</span>
+              <a href="tel:+919876543210" style={{ fontFamily:serif, fontSize:20, fontStyle:'italic', color:C.white, textDecoration:'none' }}>
                 +91 98765 43210
               </a>
             </div>
 
-            {/* Vertical divider */}
-            <div style={{ width: 1, height: 40, backgroundColor: C.border, flexShrink: 0 }} />
+            <div className="footer-vdivider" />
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <span style={{
-                fontFamily: sans, fontSize: 9, letterSpacing: '0.22em',
-                textTransform: 'uppercase', color: C.dim, fontWeight: 600,
-              }}>
-                Offices
-              </span>
-              <span style={{
-                fontFamily: serif, fontSize: 20, fontStyle: 'italic',
-                color: C.white,
-              }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+              <span style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:C.dim, fontWeight:600 }}>Offices</span>
+              <span style={{ fontFamily:serif, fontSize:20, fontStyle:'italic', color:C.white }}>
                 Mumbai · Dubai · New York
               </span>
             </div>
 
-            {/* CTA button */}
-            <motion.a
-              href="#contact"
-              whileHover={{ backgroundColor: C.gold, color: C.bg, borderColor: C.gold }}
-              whileTap={{ scale: 0.97 }}
+            <motion.a href="#contact" className="footer-contact-cta"
+              whileHover={{ backgroundColor:C.gold, color:C.bg, borderColor:C.gold }}
+              whileTap={{ scale:0.97 }}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 8,
-                padding: '12px 28px',
-                border: `1px solid ${C.goldBorder}`,
-                backgroundColor: 'transparent',
-                color: C.gold,
-                fontFamily: sans, fontSize: 10,
-                letterSpacing: '0.18em', textTransform: 'uppercase',
-                fontWeight: 700, textDecoration: 'none',
-                transition: 'all 0.3s ease', cursor: 'pointer',
+                display:'inline-flex', alignItems:'center', gap:8,
+                padding:'12px 28px',
+                border:`1px solid ${C.goldBorder}`,
+                backgroundColor:'transparent', color:C.gold,
+                fontFamily:sans, fontSize:10, letterSpacing:'0.18em',
+                textTransform:'uppercase', fontWeight:700,
+                textDecoration:'none', transition:'all 0.3s ease', cursor:'pointer',
               }}
             >
               Book a Consultation
@@ -377,31 +367,21 @@ export function Footersection() {
           </div>
         </A>
 
-        {/* ── Bottom bar ── */}
+        {/* Bottom bar */}
         <A delay={0.5}>
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            flexWrap: 'wrap', gap: 12,
-            padding: '24px 0 28px',
-          }}>
-            <p style={{
-              fontFamily: sans, fontSize: 10, letterSpacing: '0.12em',
-              color: C.dim, margin: 0,
-            }}>
-              © {new Date().getFullYear()} LUXE Estates. All rights reserved.
+          <div className="footer-bottom-bar">
+            <p style={{ fontFamily:sans, fontSize:10, letterSpacing:'0.12em', color:C.dim, margin:0 }}>
+              © {new Date().getFullYear()} KingSquare. All rights reserved.
             </p>
-
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <div style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: C.gold }} />
-              <p style={{
-                fontFamily: sans, fontSize: 10, letterSpacing: '0.12em',
-                color: C.dim, margin: 0,
-              }}>
+            <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+              <div style={{ width:4, height:4, borderRadius:'50%', backgroundColor:C.gold }} />
+              <p style={{ fontFamily:sans, fontSize:10, letterSpacing:'0.12em', color:C.dim, margin:0 }}>
                 Designed with excellence · Mumbai, India
               </p>
             </div>
           </div>
         </A>
+
       </div>
     </footer>
   );

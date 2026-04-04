@@ -140,7 +140,7 @@ export default function BlogPostPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-neutral-900 dark:text-white">{post.author}</p>
-                  <p className="text-sm text-neutral-500">LUXE Estates Expert</p>
+                  <p className="text-sm text-neutral-500">KingSquare Expert</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">

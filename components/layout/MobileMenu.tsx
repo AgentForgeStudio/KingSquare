@@ -39,7 +39,7 @@ export function MobileMenu({ isOpen, onClose, links, pathname }: MobileMenuProps
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
-            <span className="text-xl font-bold font-serif">LUXE ESTATES</span>
+            <span className="text-xl font-bold font-serif">KINGSQUARE</span>
             <button
               onClick={onClose}
               className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -116,3 +116,4 @@ export function MobileMenu({ isOpen, onClose, links, pathname }: MobileMenuProps
     </motion.div>
   );
 }
+

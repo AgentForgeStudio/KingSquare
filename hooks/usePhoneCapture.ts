@@ -21,11 +21,14 @@ export function usePhoneCapture(options: UsePhoneCaptureOptions = {}) {
     if (hasPhoneCaptured) return false;
     if (isTouchDevice()) return false;
     
-    const dismissed = sessionStorage.getItem('luxe_slide_in_dismissed');
+    const dismissed =
+      sessionStorage.getItem('kingsquare_slide_in_dismissed') ??
+      sessionStorage.getItem('luxe_slide_in_dismissed');
     return !dismissed;
   }, [hasPhoneCaptured]);
 
   const dismissSlideIn = useCallback(() => {
+    sessionStorage.setItem('kingsquare_slide_in_dismissed', 'true');
     sessionStorage.setItem('luxe_slide_in_dismissed', 'true');
   }, []);
 
@@ -34,11 +37,14 @@ export function usePhoneCapture(options: UsePhoneCaptureOptions = {}) {
     if (hasPhoneCaptured) return false;
     if (isTouchDevice()) return false;
     
-    const shown = sessionStorage.getItem('luxe_exit_shown');
+    const shown =
+      sessionStorage.getItem('kingsquare_exit_shown') ??
+      sessionStorage.getItem('luxe_exit_shown');
     return !shown;
   }, [hasPhoneCaptured]);
 
   const markExitShown = useCallback(() => {
+    sessionStorage.setItem('kingsquare_exit_shown', 'true');
     sessionStorage.setItem('luxe_exit_shown', 'true');
   }, []);
 
@@ -46,7 +52,9 @@ export function usePhoneCapture(options: UsePhoneCaptureOptions = {}) {
     if (!enabled || hasPhoneCaptured) return;
 
     if (typeof window !== 'undefined') {
-      const captured = localStorage.getItem('luxe_phone_captured');
+      const captured =
+        localStorage.getItem('kingsquare_phone_captured') ??
+        localStorage.getItem('luxe_phone_captured');
       if (captured) {
         const data = JSON.parse(captured);
         markCaptured(data.phone, data.source);

@@ -34,7 +34,7 @@ export async function createChatCompletion(
     return 'AI service is not configured. Please add your OPENAI_API_KEY to the environment variables.';
   }
 
-  const systemPrompt = `You are LUXE AI, a premium real estate assistant for LUXE Estates.
+  const systemPrompt = `You are KingSquare AI, a premium real estate assistant for KingSquare.
 Help clients find luxury properties, understand market trends, schedule viewings, answer questions about neighborhoods, pricing, mortgages, and the buying process.
 Be concise, professional, and warm. No markdown. Use line breaks only.
 When user wants human agent → suggest voice call option.
@@ -77,7 +77,7 @@ export async function createStreamingChatCompletion(
     return fallbackMessage;
   }
 
-  const systemPrompt = `You are LUXE AI, a premium real estate assistant for LUXE Estates.
+  const systemPrompt = `You are KingSquare AI, a premium real estate assistant for KingSquare.
 Help clients find luxury properties, understand market trends, schedule viewings, answer questions about neighborhoods, pricing, mortgages, and the buying process.
 Be concise, professional, and warm. No markdown. Use line breaks only.
 When user wants human agent → suggest voice call option.
@@ -113,3 +113,4 @@ When user wants to schedule a meeting → trigger schedule modal.`;
 
   return fullResponse;
 }
+

@@ -100,7 +100,7 @@ export default function BlogPage() {
           className="relative text-center z-10"
         >
           <h1 className="text-6xl font-bold tracking-tight mb-4">
-            LUXE Insights
+            KingSquare Insights
           </h1>
           <p className="text-lg text-neutral-300">
             Premium real estate intelligence & trends

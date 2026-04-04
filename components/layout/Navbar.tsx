@@ -1,106 +1,351 @@
-// "use server"
-// import { MenuBar } from "@/components/ui/bottom-menu"
+'use client';
 
-// const menuItems = [
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>msg</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <path d="M9,1.75C4.996,1.75,1.75,4.996,1.75,9c0,1.319,.358,2.552,.973,3.617,.43,.806-.053,2.712-.973,3.633,1.25,.068,2.897-.497,3.633-.973,.489,.282,1.264,.656,2.279,.848,.433,.082,.881,.125,1.338,.125,4.004,0,7.25-3.246,7.25-7.25S13.004,1.75,9,1.75Z" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Messages"
-//   },
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>envelope</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <path d="M1.75,5.75l6.767,3.733c.301,.166,.665,.166,.966,0l6.767-3.733" />
-//           <rect x="1.75" y="3.25" width="14.5" height="11.5" rx="2" ry="2" transform="translate(18 18) rotate(180)" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Mail"
-//   },
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>hashtag</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <line x1="3.75" y1="6.25" x2="15.25" y2="6.25" />
-//           <line x1="2.75" y1="11.75" x2="14.25" y2="11.75" />
-//           <line x1="7.633" y1="2.75" x2="5.289" y2="15.25" />
-//           <line x1="12.711" y1="2.75" x2="10.367" y2="15.25" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Explore"
-//   },
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>upload-4</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <path d="M15.25,11.75v1.5c0,1.105-.895,2-2,2H4.75c-1.105,0-2-.895-2-2v-1.5" />
-//           <polyline points="12.5 6.25 9 2.75 5.5 6.25" />
-//           <line x1="9" y1="2.75" x2="9" y2="10.25" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Share"
-//   },
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>feather-plus</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <path d="M13.974,9.731c-.474,3.691-3.724,4.113-6.974,3.519" />
-//           <path d="M3.75,16.25S5.062,4.729,16.25,3.75c-.56,.976-.573,2.605-.946,4.239-.524,2.011-2.335,2.261-4.554,2.261" />
-//           <line x1="4.25" y1="1.75" x2="4.25" y2="6.75" />
-//           <line x1="6.75" y1="4.25" x2="1.75" y2="4.25" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Write"
-//   },
-//   {
-//     icon: (props: React.SVGProps<SVGSVGElement>) => (
-//       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" {...props}>
-//         <title>menu</title>
-//         <g fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" stroke="currentColor">
-//           <line x1="2.25" y1="9" x2="15.75" y2="9" />
-//           <line x1="2.25" y1="3.75" x2="15.75" y2="3.75" />
-//           <line x1="2.25" y1="14.25" x2="15.75" y2="14.25" />
-//         </g>
-//       </svg>
-//     ),
-//     label: "Menu"
-//   }
-// ]
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Building2, Home, MessageCircle, Newspaper, Info, PhoneCall } from 'lucide-react';
+import { useCallStore } from '@/store/callStore';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// function Navbar() {
-//   return (
-//     <div className="flex items-center justify-center p-6">
-//       <MenuBar items={menuItems} />
-//     </div>
-//   )
-// }
+// ── Tokens ────────────────────────────────────────────────────────
+const GOLD   = '#C9A84C';
+const GOLD_B = 'rgba(201,168,76,0.35)';
+const EASE   = [0.22, 1, 0.36, 1] as const;
+const serif  = "'Cormorant Garamond','Playfair Display',Georgia,serif";
+const sans   = "'Helvetica Neue',Arial,sans-serif";
 
-// export {  Navbar }
+const navLinks = [
+  { href: '/',           label: 'Home',       icon: Home },
+  { href: '/properties', label: 'Properties', icon: Building2 },
+  { href: '/about',      label: 'About',      icon: Info },
+  { href: '/blog',       label: 'Blog',       icon: Newspaper },
+  { href: '/contact',    label: 'Contact',    icon: MessageCircle },
+] as const;
 
-  {/* Navbar */}
-        //   {/* <nav ref={navRef} style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "22px 48px", fontFamily: "'Inter',system-ui,sans-serif", willChange: "opacity" }}>
-        //     <div style={{ fontWeight: 900, fontSize: "1.5rem", letterSpacing: "-0.04em", color: "#fff", textShadow: "0 2px 10px rgba(0,0,0,.3)" }}>FIND</div>
-        //     <div className="hero-nav-links" style={{ display: "flex", gap: "2rem", color: "#fff", fontWeight: 400, textShadow: "0 2px 10px rgba(0,0,0,.3)" }}>
-        //       {["Search","Agents","Join"].map(item => <span key={item} className="nav-link">{item}</span>)}
-        //       {["Paperwork","Resources","About"].map(item => (
-        //         <span key={item} className="nav-link">{item}
-        //           <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" d="M6 9l6 6 6-6"/></svg>
-        //         </span>
-        //       ))}
-        //     </div>
-        //     <button className="signin-btn">Sign In</button>
-        //   </nav> */}
+// ── Hide on scroll-down, show on scroll-up ────────────────────────
+function useScrollVisibility() {
+  const [visible, setVisible] = useState(true);
+  const lastY = useRef(0);
+  useEffect(() => {
+    const fn = () => {
+      const y = window.scrollY;
+      if (y < 80) { setVisible(true); lastY.current = y; return; }
+      setVisible(y < lastY.current);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
+  }, []);
+  return visible;
+}
+
+// ── Desktop NavLink ───────────────────────────────────────────────
+function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        position: 'relative',
+        textDecoration: 'none',
+        fontFamily: sans,
+        fontSize: 15,
+        fontWeight: active ? 500 : 400,
+        color: active ? GOLD : hov ? '#fff' : 'rgba(255,255,255,0.85)',
+        letterSpacing: '0.02em',
+        padding: '6px 0',
+        transition: 'color 0.25s ease',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {label}
+      {/* underline reveal */}
+      <motion.span
+        animate={{ scaleX: active || hov ? 1 : 0, opacity: active || hov ? 1 : 0 }}
+        transition={{ duration: 0.3, ease: EASE }}
+        style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: 1,
+          background: active ? GOLD : 'rgba(255,255,255,0.45)',
+          transformOrigin: 'center', display: 'block',
+        }}
+      />
+    </Link>
+  );
+}
+
+// ── Animated Hamburger ────────────────────────────────────────────
+function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label={open ? 'Close menu' : 'Open menu'}
+      style={{
+        width: 44, height: 44, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        background: 'rgba(255,255,255,0.06)',
+        border: `1px solid ${open ? GOLD_B : 'rgba(255,255,255,0.15)'}`,
+        cursor: 'pointer', padding: 0, flexShrink: 0,
+        transition: 'border-color 0.3s',
+        backdropFilter: 'blur(8px)',
+      }}
+    >
+      <motion.span
+        animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+        transition={{ duration: 0.38, ease: EASE }}
+        style={{ display: 'block', width: 20, height: 1.5,
+          background: open ? GOLD : '#fff', marginBottom: 5, transformOrigin: 'center' }}
+      />
+      <motion.span
+        animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+        transition={{ duration: 0.2 }}
+        style={{ display: 'block', width: 14, height: 1.5, background: '#fff', marginBottom: 5 }}
+      />
+      <motion.span
+        animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+        transition={{ duration: 0.38, ease: EASE }}
+        style={{ display: 'block', width: 20, height: 1.5,
+          background: open ? GOLD : '#fff', transformOrigin: 'center' }}
+      />
+    </button>
+  );
+}
+
+// ── Mobile Drawer ─────────────────────────────────────────────────
+function MobileMenu({ open, pathname, onClose, onCall }: {
+  open: boolean; pathname: string; onClose: () => void; onCall: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            key="bd"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={onClose}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+              backdropFilter: 'blur(8px)', zIndex: 88 }}
+          />
+          <motion.div
+            key="panel"
+            initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+            transition={{ duration: 0.48, ease: EASE }}
+            style={{
+              position: 'fixed', top: 0, right: 0, bottom: 0,
+              width: 'min(300px, 82vw)',
+              background: '#060606',
+              borderLeft: `1px solid ${GOLD_B}`,
+              zIndex: 89, display: 'flex', flexDirection: 'column',
+              padding: '88px 36px 48px', overflow: 'hidden',
+            }}
+          >
+            {/* Ambient glow */}
+            <div style={{
+              position: 'absolute', top: -80, right: -80, width: 260, height: 260,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(201,168,76,0.09) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+            {/* Ghost letter */}
+            <div style={{
+              position: 'absolute', bottom: -24, left: -12,
+              fontFamily: serif, fontSize: 200, fontWeight: 300,
+              color: 'rgba(201,168,76,0.04)', lineHeight: 1,
+              userSelect: 'none', pointerEvents: 'none', letterSpacing: '-0.05em',
+            }}>K</div>
+
+            <nav style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+              {navLinks.map(({ href, label }, i) => {
+                const active = pathname === href;
+                return (
+                  <motion.div key={href}
+                    initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 28 }}
+                    transition={{ delay: 0.08 + i * 0.06, duration: 0.4, ease: EASE }}
+                  >
+                    <Link href={href} onClick={onClose} style={{
+                      display: 'flex', alignItems: 'baseline', gap: 14,
+                      padding: '18px 0', textDecoration: 'none', position: 'relative',
+                    }}>
+                      {active && (
+                        <span style={{
+                          position: 'absolute', left: -18, top: '50%', transform: 'translateY(-50%)',
+                          width: 4, height: 4, borderRadius: '50%',
+                          background: GOLD, boxShadow: `0 0 8px ${GOLD}`,
+                        }} />
+                      )}
+                      <span style={{
+                        fontFamily: serif, fontSize: 30, fontWeight: 300, fontStyle: 'italic',
+                        color: active ? GOLD : 'rgba(244,241,235,0.65)', transition: 'color 0.2s',
+                      }}>{label}</span>
+                      <span style={{
+                        fontFamily: sans, fontSize: 9, letterSpacing: '0.22em',
+                        textTransform: 'uppercase', color: 'rgba(244,241,235,0.22)',
+                      }}>0{i + 1}</span>
+                    </Link>
+                    <div style={{ height: 1, background: 'rgba(244,241,235,0.05)' }} />
+                  </motion.div>
+                );
+              })}
+            </nav>
+
+            <motion.button
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }} transition={{ delay: 0.45, duration: 0.4, ease: EASE }}
+              onClick={() => { onClose(); onCall(); }}
+              whileHover={{ background: GOLD, color: '#060606', borderColor: GOLD }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                marginTop: 36, width: '100%', padding: '14px 0',
+                border: `1px solid ${GOLD_B}`, background: 'transparent', color: GOLD,
+                fontFamily: sans, fontSize: 10, letterSpacing: '0.22em',
+                textTransform: 'uppercase', fontWeight: 700, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+                transition: 'all 0.3s',
+              }}
+            >
+              <PhoneCall size={12} />
+              Talk to Agent
+            </motion.button>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ── Main Navbar ───────────────────────────────────────────────────
+export function Navbar() {
+  const pathname        = usePathname();
+  const openCallOptions = useCallStore((s) => s.openCallOptions);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const visible = useScrollVisibility();
+
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+        /* CTA button */
+        .ks-cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 9px;
+          padding: 11px 22px;
+          border: 1px solid ${GOLD_B};
+          background: rgba(201,168,76,0.08);
+          color: ${GOLD};
+          font-family: ${sans};
+          font-size: 12px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+          text-decoration: none;
+          transition: background 0.3s, color 0.3s, border-color 0.3s;
+          flex-shrink: 0;
+        }
+        .ks-cta:hover {
+          background: ${GOLD};
+          color: #060606;
+          border-color: ${GOLD};
+        }
+        /* PhoneCall icon pulse */
+        .ks-cta svg {
+          animation: phonePulse 2.4s ease-in-out infinite;
+        }
+        @keyframes phonePulse {
+          0%, 100% { opacity: 1; transform: rotate(0deg); }
+          20%       { transform: rotate(-12deg); }
+          40%       { transform: rotate(10deg); }
+          60%       { opacity: 0.7; transform: rotate(0deg); }
+        }
+
+        @media (min-width: 1024px) { .ks-burger { display: none !important; } }
+        @media (max-width: 1023px) { .ks-desktop { display: none !important; } }
+        @media (max-width: 640px)  { .ks-cta-mobile { font-size: 11px !important; padding: 10px 16px !important; } }
+      `}</style>
+
+      <motion.header
+        animate={{ y: visible ? 0 : -110, opacity: visible ? 1 : 0 }}
+        transition={{ duration: 0.45, ease: EASE }}
+        style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0,
+          zIndex: 90,
+          /* Gradient fade from dark at top → fully transparent below
+             so the navbar text is always readable without a harsh box */
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 100%)',
+          padding: '0 clamp(20px, 4vw, 60px)',
+          height: 76,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 24,
+        }}
+      >
+        {/* ── Logo ── */}
+        <Link href="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+          <img
+            src="./rm.png"
+            alt="Logo"
+            style={{
+              height: 48,           /* ← bigger */
+              width: 'auto',
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 2px 12px rgba(0,0,0,0.6))',  /* keeps it visible on any bg */
+            }}
+          />
+        </Link>
+
+        {/* ── Desktop links (centred) ── */}
+        <div
+          className="ks-desktop"
+          style={{
+            display: 'flex', alignItems: 'center',
+            gap: 'clamp(20px, 3vw, 44px)',
+            flex: 1, justifyContent: 'center',
+          }}
+        >
+          {navLinks.map(({ href, label }) => (
+            <NavLink key={href} href={href} label={label} active={pathname === href} />
+          ))}
+        </div>
+
+        {/* ── Talk to Agent CTA (desktop) ── */}
+        <button className="ks-cta ks-desktop   " onClick={openCallOptions}>
+          <PhoneCall size={14} />
+         <span className='font-bold '> Talk to Agent</span>
+        </button>
+
+        {/* ── Talk to Agent (mobile — compact) + hamburger ── */}
+        <div className="ks-burger" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button className="ks-cta font-bold ks-cta-mobile " onClick={openCallOptions}>
+            <PhoneCall size={13} />
+            Talk to Agent
+          </button>
+          <Hamburger open={menuOpen} onClick={() => setMenuOpen(o => !o)} />
+        </div>
+      </motion.header>
+
+      <MobileMenu
+        open={menuOpen}
+        pathname={pathname}
+        onClose={() => setMenuOpen(false)}
+        onCall={openCallOptions}
+      />
+    </>
+  );
+}
+
+export default Navbar;

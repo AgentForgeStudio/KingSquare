@@ -107,15 +107,12 @@ export default function ContactPage() {
               {/* CTA */}
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
 
-                <button
-                  onClick={openCallOptions}
+                 <button onClick={() => openCallOptions()}
                   className="flex-1 py-3 rounded-xl bg-[#c8a96e] text-white hover:scale-[1.02] transition-all shadow-md"
                 >
                   Call Now
                 </button>
-
-                <button
-                  onClick={openScheduleModal}
+              <button onClick={() => openScheduleModal()}
                   className="flex-1 py-3 rounded-xl border border-neutral-300 hover:border-[#c8a96e] transition-all"
                 >
                   Book Meeting

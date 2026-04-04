@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { resolveFormspreeEndpoint } from '@/lib/formspree';
 
 const enquirySchema = z.object({
   type: z.string(),
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = enquirySchema.parse(body);
 
-    const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ENQUIRY_ENDPOINT;
+    const formspreeId = resolveFormspreeEndpoint(process.env.NEXT_PUBLIC_FORMSPREE_ENQUIRY_ENDPOINT);
 
     if (!formspreeId) {
       console.warn('Enquiry Formspree endpoint not configured');
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        _subject: `🏠 NEW ENQUIRY — ${data.enquiryType} | Budget: ₹${data.budgetMin / 100000}L – ₹${data.budgetMax / 100000}L | ${data.name}`,
+        _subject: `NEW ENQUIRY - ${data.enquiryType} | Budget: Rs.${data.budgetMin / 100000}L - Rs.${data.budgetMax / 100000}L | ${data.name}`,
         _replyto: data.email,
         type: data.type,
         enquiryType: data.enquiryType,

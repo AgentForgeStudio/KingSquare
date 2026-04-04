@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { resolveFormspreeEndpoint } from '@/lib/formspree';
 
 const scheduleSchema = z.object({
   type: z.string(),
@@ -18,14 +19,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = scheduleSchema.parse(body);
 
-    const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_SCHEDULE_ENDPOINT;
+    const formspreeId = resolveFormspreeEndpoint(process.env.NEXT_PUBLIC_FORMSPREE_SCHEDULE_ENDPOINT);
 
     if (!formspreeId) {
       console.warn('Schedule Formspree endpoint not configured');
       return NextResponse.json({ success: true });
     }
 
-    const ownerMessage = `A new meeting has been scheduled. 
+    const ownerMessage = `A new meeting has been scheduled.
 Client: ${data.name}
 Phone: ${data.phone}
 Email: ${data.email}
@@ -38,7 +39,7 @@ Please confirm and add to your calendar.`;
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        _subject: `NEW MEETING BOOKED — ${data.name} on ${data.date} at ${data.time}`,
+        _subject: `NEW MEETING BOOKED - ${data.name} on ${data.date} at ${data.time}`,
         _replyto: data.email,
         type: data.type,
         name: data.name,
