@@ -4,43 +4,55 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 // ── tokens (light / white background) ─────────────────────────
-const gold        = '#B8952A';
-const goldDim     = 'rgba(184,149,42,0.12)';
-const goldBorder  = 'rgba(184,149,42,0.35)';
-const ink         = '#0F0F0F';
-const inkMid      = 'rgba(15,15,15,0.55)';
-const inkLight    = 'rgba(15,15,15,0.32)';
+const gold = '#B8952A';
+const goldDim = 'rgba(184,149,42,0.12)';
+const goldBorder = 'rgba(184,149,42,0.35)';
+const ink = '#0F0F0F';
+const inkMid = 'rgba(15,15,15,0.55)';
+const inkLight = 'rgba(15,15,15,0.32)';
 const cardSurface = '#F7F4EE';
-const borderLine  = 'rgba(15,15,15,0.10)';
+const borderLine = 'rgba(15,15,15,0.10)';
 const displayFont = "'Cormorant Garamond','Playfair Display',Georgia,serif";
-const sansFont    = "'Helvetica Neue',Arial,sans-serif";
+const sansFont = "'Helvetica Neue',Arial,sans-serif";
 
 const neighborhoods = [
-  { name: 'Beverly Hills',  city: 'Los Angeles', count: 124,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=900&auto=format&fit=crop' },
-  { name: 'Bel Air',        city: 'Los Angeles', count: 87,
-    image: 'https://images.unsplash.com/photo-1613490908681-3e4b7b2fb0eb?q=80&w=900&auto=format&fit=crop' },
-  { name: 'Hollywood Hills',city: 'Los Angeles', count: 63,
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=900&auto=format&fit=crop' },
-  { name: 'Downtown',       city: 'Dubai',       count: 156,
-    image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=900&auto=format&fit=crop' },
-  { name: 'Upper East Side',city: 'New York',    count: 92,
-    image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=900&auto=format&fit=crop' },
-  { name: 'Palm Jumeirah',  city: 'Dubai',       count: 78,
-    image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=900&auto=format&fit=crop' },
+  {
+    name: 'Bassein', city: 'Vasai', count: 124,
+    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=900&auto=format&fit=crop'
+  },
+  {
+    name: 'Stella', city: 'Vasai', count: 87,
+    image: 'https://images.unsplash.com/photo-1613490908681-3e4b7b2fb0eb?q=80&w=900&auto=format&fit=crop'
+  },
+  {
+    name: 'Tungareshwar', city: 'Vasai', count: 63,
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=900&auto=format&fit=crop'
+  },
+  {
+    name: 'Downtown', city: 'Virar', count: 156,
+    image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=900&auto=format&fit=crop'
+  },
+  {
+    name: 'Suncity', city: 'Vasai', count: 92,
+    image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=900&auto=format&fit=crop'
+  },
+  {
+    name: 'Arnala', city: 'Virar', count: 78,
+    image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=900&auto=format&fit=crop'
+  },
 ];
 
 const MapPinIcon = () => (
   <svg width="10" height="10" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-    <circle cx="12" cy="10" r="3"/>
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+    <circle cx="12" cy="10" r="3" />
   </svg>
 );
 
 // Letter-by-letter animated heading
 function AnimatedHeading({ text, delay = 0 }: { text: string; delay?: number }) {
-  const ref  = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
@@ -67,7 +79,7 @@ function AnimatedHeading({ text, delay = 0 }: { text: string; delay?: number }) 
 // Individual card
 function NeighborhoodCard({ area, index }: { area: typeof neighborhoods[0]; index: number }) {
   const [hovered, setHovered] = useState(false);
-  const ref    = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
@@ -180,7 +192,7 @@ function NeighborhoodCard({ area, index }: { area: typeof neighborhoods[0]; inde
 // ── Main export ─────────────────────────────────────────────────
 export function NeighborhoodMap() {
   const sectionRef = useRef<HTMLElement>(null);
-  const inView     = useInView(sectionRef, { once: true, margin: '-100px' });
+  const inView = useInView(sectionRef, { once: true, margin: '-100px' });
 
   return (
     <section
@@ -255,7 +267,7 @@ export function NeighborhoodMap() {
           gap: 20,
         }}>
           {neighborhoods.map((area, i) => (
-            <NeighborhoodCard key={area.name} area={area} index={i} />
+            <NeighborhoodCard key={`${area.name}-${i}`} area={area} index={i} />
           ))}
         </div>
 

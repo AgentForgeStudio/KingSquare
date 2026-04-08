@@ -102,8 +102,8 @@ const TEAM = [
 ];
 
 const MILESTONES = [
-  { year: '2009', title: 'Founded', description: 'FIND was born in Mumbai with a vision to redefine luxury real estate through trust and precision.' },
-  { year: '2013', title: 'First 1000 Deals', description: 'Reached our first thousand closed transactions, establishing ourselves as Mumbai\'s go-to luxury agency.' },
+  { year: '2009', title: 'Founded', description: 'FIND was born in Naigaon with a vision to redefine luxury real estate through trust and precision.' },
+  { year: '2013', title: 'First 1000 Deals', description: 'Reached our first thousand closed transactions, establishing ourselves as Naigaon\'s go-to luxury agency.' },
   { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted agents.' },
   { year: '2020', title: 'KingSquare AI Launch', description: 'Launched India\'s first AI-powered property concierge, transforming how clients discover their dream homes.' },
   { year: '2024', title: '10,000 Families Housed', description: 'Celebrated our ten-thousandth successful transaction — a milestone built on relationships, not transactions.' },
@@ -113,7 +113,7 @@ const TESTIMONIALS = [
   {
     quote: "FIND didn't just find us a home. They found us the neighbourhood we didn't know we needed. The attention to detail was unlike anything we've experienced.",
     name: 'Riya & Aditya Kapoor',
-    location: 'Bandra West, Mumbai',
+    location: 'Naigaon East, Naigaon',
     image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=200&q=80',
   },
   {
@@ -123,9 +123,9 @@ const TESTIMONIALS = [
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80',
   },
   {
-    quote: "I've worked with agencies in London, Dubai, and Singapore. The level of service FIND provides is genuinely world-class.",
+    quote: "I've worked with agencies in Virar, Virar, and Singapore. The level of service FIND provides is genuinely world-class.",
     name: 'Natasha Iyer',
-    location: 'Worli, Mumbai',
+    location: 'Juchandra, Naigaon',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80',
   },
 ];
@@ -674,7 +674,7 @@ export default function AboutPage() {
                 custom={0.28} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                 style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.45)', lineHeight: 1.85 }}
               >
-                From a single office in Bandra to a nationwide network — every chapter of our story has been written with integrity.
+                From a single office in Naigaon to a nationwide network — every chapter of our story has been written with integrity.
               </motion.p>
 
               {/* Decorative city image */}
@@ -684,14 +684,14 @@ export default function AboutPage() {
               >
                 <Image
                   src="https://images.unsplash.com/photo-1567446537708-ac4aa75c9c28?w=800&q=80"
-                  alt="Mumbai Skyline"
+                  alt="Naigaon Skyline"
                   fill className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,10,10,0.6), transparent)' }} />
                 <div style={{ position: 'absolute', bottom: 16, left: 16 }}>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase' as const, color: 'rgba(255,255,255,0.5)', margin: 0, fontWeight: 600 }}>
-                    Mumbai, India
+                    Naigaon, India
                   </p>
                 </div>
               </motion.div>

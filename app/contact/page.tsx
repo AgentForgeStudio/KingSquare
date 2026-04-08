@@ -94,7 +94,7 @@ export default function ContactPage() {
               {[
                 { icon: Phone, label: '+91 98765 43210' },
                 { icon: Mail, label: 'hello@kingsquare.com' },
-                { icon: MapPin, label: 'Mumbai • Dubai • Global' },
+                { icon: MapPin, label: 'Naigaon • Virar • Global' },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-xl bg-[#c8a96e]/10 flex items-center justify-center group-hover:scale-110 transition">

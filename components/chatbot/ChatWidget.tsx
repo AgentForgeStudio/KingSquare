@@ -354,8 +354,8 @@ export function ChatWidget() {
     if (action === 'agent') { setIsOpen(false); openCallOptions?.(); return; }
     const label = QUICK_REPLIES.find(q => q.action === action)?.label || '';
     const responses: Record<string, string> = {
-      browse: 'We have curated listings across Mumbai, Dubai, and New York. Would you like to filter by location, property type, or budget?',
-      neighborhoods: 'From Bandra and Juhu in Mumbai to Downtown Dubai and Manhattan — which area interests you most?',
+      browse: 'We have curated listings across Naigaon, Virar, and Vasai. Would you like to filter by location, property type, or budget?',
+      neighborhoods: 'From Naigaon and Bhabola in Naigaon to Virar West and Vasai — which area interests you most?',
       calculator: 'What property price range are you considering? I can walk you through the full investment breakdown.',
     };
     pushMsg('user', label);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Geist } from "next/font/google";
 import "./globals.css";
+import "mapbox-gl/dist/mapbox-gl.css";
 import { AppProviders } from "@/components/common/AppProviders";
 import { cn } from "@/lib/utils";
 
@@ -31,6 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn(inter.variable, playfair.variable, "font-sans", geist.variable, "dark")}>
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+      </head>
       <body className="min-h-screen bg-[#070707] text-neutral-50 antialiased font-sans selection:bg-gold-500/30 selection:text-gold-100">
         <AppProviders>
           {children}

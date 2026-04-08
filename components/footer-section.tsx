@@ -345,7 +345,7 @@ export function Footersection() {
             <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
               <span style={{ fontFamily:sans, fontSize:9, letterSpacing:'0.22em', textTransform:'uppercase', color:C.dim, fontWeight:600 }}>Offices</span>
               <span style={{ fontFamily:serif, fontSize:20, fontStyle:'italic', color:C.white }}>
-                Mumbai · Dubai · New York
+                Naigaon · Virar · Vasai
               </span>
             </div>
 
@@ -376,7 +376,7 @@ export function Footersection() {
             <div style={{ display:'flex', gap:6, alignItems:'center' }}>
               <div style={{ width:4, height:4, borderRadius:'50%', backgroundColor:C.gold }} />
               <p style={{ fontFamily:sans, fontSize:10, letterSpacing:'0.12em', color:C.dim, margin:0 }}>
-                Designed with excellence · Mumbai, India
+                Designed with excellence · Naigaon, India
               </p>
             </div>
           </div>

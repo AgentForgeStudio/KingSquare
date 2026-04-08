@@ -556,7 +556,7 @@ export default function AboutPage() {
 
           <div className="reveal hero-rule" />
 
-          <p className="reveal delay-1 hero-eyebrow">Est. 2019 · Mumbai, India</p>
+          <p className="reveal delay-1 hero-eyebrow">Est. 2019 · Naigaon, India</p>
 
           <h1 className="reveal delay-2 hero-title">
             About<br /><em>Us</em>

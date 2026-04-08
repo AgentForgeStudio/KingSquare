@@ -326,7 +326,7 @@ export function EnquiryForm() {
               <StyledInput
                 value={formData.location}
                 onChange={(v) => patch({ location: v })}
-                placeholder="e.g. Bandra, South Mumbai"
+                placeholder="e.g. Naigaon, Naigaon South"
               />
             </div>
 

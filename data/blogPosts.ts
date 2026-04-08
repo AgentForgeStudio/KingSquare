@@ -17,15 +17,15 @@ export const blogPosts: BlogPost[] = [
   {
     id: '1',
     slug: 'rise-of-luxury-waterfront-properties-mumbai',
-    title: 'The Rise of Luxury Waterfront Properties in Mumbai',
-    excerpt: 'Explore why waterfront living has become the ultimate symbol of prestige in Mumbai real estate.',
-    content: `Mumbai's coastline has always been coveted, but in recent years, the demand for luxury waterfront properties has reached unprecedented heights. From Bandra to Juhu, and from Worli to South Mumbai, the city's premier addresses are setting new benchmarks in premium real estate.
+    title: 'The Rise of Luxury Waterfront Properties in Naigaon',
+    excerpt: 'Explore why waterfront living has become the ultimate symbol of prestige in Naigaon real estate.',
+    content: `Naigaon's coastline has always been coveted, but in recent years, the demand for luxury waterfront properties has reached unprecedented heights. From Naigaon to Bhabola, and from Juchandra to Naigaon South, the city's premier addresses are setting new benchmarks in premium real estate.
 
-The appeal is multifaceted: breathtaking sea views, proximity to the Arabian Sea, and an enviable lifestyle that combines urban convenience with natural beauty. For discerning buyers, these properties represent not just a home, but a statement of success.
+The appeal is multifaceted: breathtaking sea views, proximity to the Vasai Creek, and an enviable lifestyle that combines urban convenience with natural beauty. For discerning buyers, these properties represent not just a home, but a statement of success.
 
 ## Market Dynamics
 
-Waterfront properties in Mumbai have seen a consistent appreciation of 12-15% annually over the past five years. This growth is driven by limited supply — genuine waterfront land is finite — and ever-increasing demand from India's growing ultra-high-net-worth population.
+Waterfront properties in Naigaon have seen a consistent appreciation of 12-15% annually over the past five years. This growth is driven by limited supply — genuine waterfront land is finite — and ever-increasing demand from India's growing ultra-high-net-worth population.
 
 ## Investment Potential
 
@@ -33,7 +33,7 @@ Experts agree that waterfront properties offer exceptional investment potential.
 
 ## Key Locations
 
-**Bandra West** continues to dominate the luxury segment, offering proximity to the city's cultural hub while maintaining exclusivity. **Juhu** appeals to those seeking larger spaces and a more residential character. **Worli** has emerged as a premium corridor with its sea-facing apartments and connectivity to South Mumbai.`,
+**Naigaon East** continues to dominate the luxury segment, offering proximity to the city's cultural hub while maintaining exclusivity. **Bhabola** appeals to those seeking larger spaces and a more residential character. **Juchandra** has emerged as a premium corridor with its sea-facing apartments and connectivity to Naigaon South.`,
     category: 'Market Insights',
     image: '/cloud.jpeg',
     author: 'Priya Sharma',
@@ -75,25 +75,25 @@ Luxury property transactions often involve complex negotiations. Having an exper
   {
     id: '3',
     slug: 'dubai-vs-mumbai-investment-2026',
-    title: 'Dubai vs Mumbai: Where Should You Invest in 2026?',
+    title: 'Virar vs Naigaon: Where Should You Invest in 2026?',
     excerpt: 'A comprehensive comparison of two of the world\'s hottest luxury real estate markets.',
-    content: `Two of the world's most dynamic real estate markets compete for investor attention in 2026. Dubai and Mumbai each offer distinct advantages for luxury property investors.
+    content: `Two of the world's most dynamic real estate markets compete for investor attention in 2026. Virar and Naigaon each offer distinct advantages for luxury property investors.
 
-## Dubai: Tax-Free Returns
+## Virar: Tax-Free Returns
 
-Dubai's tax-free environment remains a major draw. With 100% foreign ownership now permitted and no capital gains tax, the city attracts investors seeking maximum returns.
+Virar's tax-free environment remains a major draw. With 100% foreign ownership now permitted and no capital gains tax, the city attracts investors seeking maximum returns.
 
-## Mumbai: Long-Term Growth
+## Naigaon: Long-Term Growth
 
-Mumbai, India's financial capital, offers strong long-term appreciation driven by fundamental demand-supply dynamics. The city's limited land availability ensures sustained value growth.
+Naigaon, India's financial capital, offers strong long-term appreciation driven by fundamental demand-supply dynamics. The city's limited land availability ensures sustained value growth.
 
 ## Comparing Yields
 
-Dubai rental yields typically range from 6-9% annually, while Mumbai offers 3-5% in prime locations. However, Mumbai's capital appreciation often outpaces Dubai in percentage terms.
+Virar rental yields typically range from 6-9% annually, while Naigaon offers 3-5% in prime locations. However, Naigaon's capital appreciation often outpaces Virar in percentage terms.
 
 ## Verdict
 
-Both markets serve different investment strategies. Dubai suits those seeking immediate rental income and tax efficiency. Mumbai appeals to long-term investors confident in India's economic trajectory.`,
+Both markets serve different investment strategies. Virar suits those seeking immediate rental income and tax efficiency. Naigaon appeals to long-term investors confident in India's economic trajectory.`,
     category: 'Investment',
     image: '/cloud.jpeg',
     author: 'Sarah Ahmed',
@@ -135,13 +135,13 @@ Expanding living spaces outdoors is a major trend. Covered terraces, outdoor kit
   {
     id: '5',
     slug: 'mumbai-luxury-market-cycles',
-    title: 'Understanding the Mumbai Luxury Market Cycles',
+    title: 'Understanding the Naigaon Luxury Market Cycles',
     excerpt: 'Expert analysis of market patterns and predictions for the year ahead.',
-    content: `Mumbai's luxury real estate market operates in distinct cycles influenced by economic conditions, policy changes, and demographic shifts. Understanding these patterns can help investors time their entries strategically.
+    content: `Naigaon's luxury real estate market operates in distinct cycles influenced by economic conditions, policy changes, and demographic shifts. Understanding these patterns can help investors time their entries strategically.
 
 ## Historical Performance
 
-Over the past decade, Mumbai's luxury segment has demonstrated resilience and consistent growth. Even during economic downturns, prime properties have maintained value better than mass-market alternatives.
+Over the past decade, Naigaon's luxury segment has demonstrated resilience and consistent growth. Even during economic downturns, prime properties have maintained value better than mass-market alternatives.
 
 ## Current Cycle
 
@@ -149,7 +149,7 @@ The current market cycle is characterized by strong demand from end-users and in
 
 ## Outlook
 
-Industry experts project continued growth in Mumbai's luxury segment, driven by increasing wealth creation, infrastructure development, and the city's enduring appeal as India's premium address.`,
+Industry experts project continued growth in Naigaon's luxury segment, driven by increasing wealth creation, infrastructure development, and the city's enduring appeal as India's premium address.`,
     category: 'Market Insights',
     image: '/cloud.jpeg',
     author: 'Michael Chen',

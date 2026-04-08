@@ -12,9 +12,9 @@ const posts = [
   {
     id: 1,
     slug: 'luxury-waterfront-mumbai',
-    title: 'The Rise of Luxury Waterfront Properties in Mumbai',
+    title: 'The Rise of Luxury Waterfront Properties in Naigaon',
     excerpt:
-      'Explore why waterfront living has become the ultimate symbol of prestige in Mumbai real estate.',
+      'Explore why waterfront living has become the ultimate symbol of prestige in Naigaon real estate.',
     category: 'Market Insights',
     image: '/cloud.jpeg',
     author: 'Priya Sharma',
@@ -37,7 +37,7 @@ const posts = [
   {
     id: 3,
     slug: 'dubai-vs-mumbai-investment',
-    title: 'Dubai vs Mumbai: Where Should You Invest in 2026?',
+    title: 'Virar vs Naigaon: Where Should You Invest in 2026?',
     excerpt: 'Comparison of two luxury real estate markets.',
     category: 'Investment',
     image: '/cloud.jpeg',

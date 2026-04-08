@@ -1,704 +1,266 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import Link from 'next/link';
+import { use, useRef } from 'react';
+import { properties } from '@/data/properties';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { MapPin, Bed, Bath, Square, Search, SlidersHorizontal, X, ArrowRight, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { MapPin, Bed, Bath, Square, ChevronLeft, ArrowRight, Check, Calendar, Car, ExternalLink } from 'lucide-react';
+import { useCallStore } from '@/store/callStore';
+import Map, { Marker } from 'react-map-gl/mapbox';
 
-// ─── Easing ────────────────────────────────────────────────────────────────────
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-// ─── Variants ──────────────────────────────────────────────────────────────────
-const fadeUp = {
-  hidden: { opacity: 0, y: 36 },
-  visible: (delay = 0) => ({
-    opacity: 1, y: 0,
-    transition: { duration: 0.85, delay, ease: EASE },
-  }),
-};
-const fadeLeft = {
-  hidden: { opacity: 0, x: -24 },
-  visible: (delay = 0) => ({
-    opacity: 1, x: 0,
-    transition: { duration: 0.75, delay, ease: EASE },
-  }),
-};
-const lineGrow = {
-  hidden: { scaleX: 0 },
-  visible: (delay = 0) => ({
-    scaleX: 1,
-    transition: { duration: 0.7, delay, ease: EASE },
-  }),
-};
+const EASE = [0.22, 1, 0.36, 1];
 
-// ─── Mock Data ─────────────────────────────────────────────────────────────────
-const PROPERTIES = [
-  {
-    id: '1', slug: 'imperial-heights-bandra',
-    title: 'Imperial Heights', neighborhood: 'Bandra West', city: 'Mumbai',
-    type: 'Penthouse', status: 'for-sale' as const, featured: true,
-    beds: 4, baths: 4, sqft: 4200, price: 85000000,
-    priceLabel: '₹8.5 Cr',
-    tags: ['Sea View', 'Private Pool', 'Smart Home'],
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
-    description: 'Iconic sea-facing penthouse with panoramic views of the Arabian Sea.',
-  },
-  {
-    id: '2', slug: 'verde-villa-juhu',
-    title: 'Verde Villa', neighborhood: 'Juhu', city: 'Mumbai',
-    type: 'Villa', status: 'for-sale' as const, featured: false,
-    beds: 5, baths: 5, sqft: 6800, price: 120000000,
-    priceLabel: '₹12 Cr',
-    tags: ['Private Garden', 'Infinity Pool', 'Home Theatre'],
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-    description: 'A sprawling villa retreat hidden amongst Juhu\'s quiet lanes.',
-  },
-  {
-    id: '3', slug: 'marina-residences-worli',
-    title: 'Marina Residences', neighborhood: 'Worli', city: 'Mumbai',
-    type: 'Apartment', status: 'for-sale' as const, featured: true,
-    beds: 3, baths: 3, sqft: 2800, price: 45000000,
-    priceLabel: '₹4.5 Cr',
-    tags: ['Sea Link View', 'Concierge', 'Gym'],
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
-    description: 'Contemporary residences overlooking the iconic Bandra–Worli Sea Link.',
-  },
-  {
-    id: '4', slug: 'sky-loft-lower-parel',
-    title: 'Sky Loft', neighborhood: 'Lower Parel', city: 'Mumbai',
-    type: 'Apartment', status: 'for-rent' as const, featured: false,
-    beds: 2, baths: 2, sqft: 1650, price: 180000,
-    priceLabel: '₹1.8L/mo',
-    tags: ['City View', 'Co-working', 'Rooftop'],
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-    description: 'Industrial-chic loft in the heart of Mumbai\'s commercial district.',
-  },
-  {
-    id: '5', slug: 'the-grove-alibaug',
-    title: 'The Grove', neighborhood: 'Alibaug', city: 'Raigad',
-    type: 'Villa', status: 'for-sale' as const, featured: false,
-    beds: 4, baths: 4, sqft: 5500, price: 38000000,
-    priceLabel: '₹3.8 Cr',
-    tags: ['Farmhouse', 'Orchard', 'Private Beach'],
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
-    description: 'A secluded coastal estate nestled within a private mango grove.',
-  },
-  {
-    id: '6', slug: 'downtown-studio-bkc',
-    title: 'Downtown Studio', neighborhood: 'BKC', city: 'Mumbai',
-    type: 'Apartment', status: 'for-rent' as const, featured: false,
-    beds: 1, baths: 1, sqft: 680, price: 75000,
-    priceLabel: '₹75K/mo',
-    tags: ['Furnished', 'Metro Access', 'Serviced'],
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
-    description: 'A fully furnished studio in Mumbai\'s premium business district.',
-  },
-  {
-    id: '7', slug: 'pali-hill-bungalow',
-    title: 'Pali Hill Bungalow', neighborhood: 'Pali Hill', city: 'Mumbai',
-    type: 'Estate', status: 'for-sale' as const, featured: true,
-    beds: 6, baths: 7, sqft: 9200, price: 220000000,
-    priceLabel: '₹22 Cr',
-    tags: ['Heritage', 'Garden', 'Staff Quarters'],
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
-    description: 'A grand colonial bungalow set within mature gardens on Pali Hill.',
-  },
-  {
-    id: '8', slug: 'versova-townhouse',
-    title: 'Versova Townhouse', neighborhood: 'Versova', city: 'Mumbai',
-    type: 'Townhouse', status: 'for-sale' as const, featured: false,
-    beds: 3, baths: 3, sqft: 2100, price: 32000000,
-    priceLabel: '₹3.2 Cr',
-    tags: ['Beach Proximity', 'Duplex', 'Terrace'],
-    image: 'https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=800&q=80',
-    description: 'A contemporary duplex townhouse steps from Versova beach.',
-  },
-];
+export default function PropertyDetailPage(props: { params: Promise<{ slug: string }> }) {
+  const params = use(props.params);
+  const property = properties.find((p) => p.slug === params.slug);
 
-const TYPES   = ['All', 'Apartment', 'Villa', 'Penthouse', 'Estate', 'Townhouse'];
-const STATUSES = ['All', 'For Sale', 'For Rent'];
-const SORT_OPTIONS = ['Default', 'Price: Low to High', 'Price: High to Low', 'Newest'];
+  if (!property) return notFound();
 
-// ─── Property Card ─────────────────────────────────────────────────────────────
-function PropertyCard({ property, index }: { property: typeof PROPERTIES[0]; index: number }) {
-  const [hovered, setHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end end'] });
+  
+  // Progress bar
+  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
-  return (
-    <motion.div
-      custom={index * 0.07}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
-      variants={fadeUp}
-    >
-      <Link href={`/properties/${property.slug}`} className="block group">
-        <div
-          className="relative overflow-hidden bg-neutral-100"
-          style={{ aspectRatio: '4/3' }}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          {/* Image */}
-          <motion.div
-            className="absolute inset-0"
-            animate={{ scale: hovered ? 1.06 : 1 }}
-            transition={{ duration: 0.8, ease: EASE }}
-          >
-            <Image
-              src={property.image}
-              alt={property.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            />
-          </motion.div>
+  // Hero parallax
+  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
-          {/* Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
+  const openScheduleModal = useCallStore((s) => s.openScheduleModal);
+  const openCallOptions = useCallStore((s) => s.openCallOptions);
 
-          {/* Badges */}
-          <div className="absolute top-4 left-4 flex gap-2">
-            {property.featured && (
-              <span style={{
-                padding: '4px 10px',
-                backgroundColor: '#c8a96e',
-                color: '#fafaf8',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 9, letterSpacing: '0.14em',
-                textTransform: 'uppercase', fontWeight: 600,
-              }}>
-                Featured
-              </span>
-            )}
-            <span style={{
-              padding: '4px 10px',
-              backgroundColor: property.status === 'for-sale' ? 'rgba(16,185,129,0.9)' : 'rgba(59,130,246,0.9)',
-              color: '#fff',
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 9, letterSpacing: '0.14em',
-              textTransform: 'uppercase', fontWeight: 600,
-            }}>
-              {property.status === 'for-sale' ? 'For Sale' : 'For Rent'}
-            </span>
-          </div>
-
-          {/* Hover CTA */}
-          <AnimatePresence>
-            {hovered && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
-                transition={{ duration: 0.25, ease: EASE }}
-                className="absolute bottom-4 right-4"
-              >
-                <span style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  padding: '7px 14px',
-                  backgroundColor: '#fafaf8',
-                  color: '#0a0a0a',
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 10, letterSpacing: '0.12em',
-                  textTransform: 'uppercase', fontWeight: 600,
-                }}>
-                  View
-                  <ArrowRight size={12} />
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Price on image */}
-          <div className="absolute bottom-4 left-4">
-            <p style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 22, fontWeight: 700, color: '#fafaf8',
-              lineHeight: 1, letterSpacing: '-0.01em',
-            }}>
-              {property.priceLabel}
-            </p>
-          </div>
-        </div>
-
-        {/* Card body */}
-        <div className="pt-4 pb-5">
-          {/* Accent line */}
-          <div className="relative h-px bg-neutral-200 mb-4 overflow-hidden">
-            <motion.div
-              className="absolute inset-y-0 left-0 bg-[#c8a96e]"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: hovered ? 1 : 0.3 }}
-              viewport={{ once: true }}
-              animate={{ scaleX: hovered ? 1 : 0.3 }}
-              transition={{ duration: 0.5, ease: EASE }}
-              style={{ transformOrigin: 'left', width: '100%' }}
-            />
-          </div>
-
-          <div className="flex items-start justify-between gap-3 mb-2">
-            <h3 style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
-              fontSize: 18, fontWeight: 700,
-              color: hovered ? '#c8a96e' : '#0a0a0a',
-              lineHeight: 1.2, letterSpacing: '-0.01em',
-              transition: 'color 0.3s',
-            }}>
-              {property.title}
-            </h3>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 9, letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: '#b8b5ae',
-              fontWeight: 500, flexShrink: 0, paddingTop: 3,
-            }}>
-              {property.type}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 mb-3" style={{ color: '#888880' }}>
-            <MapPin size={11} />
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.08em' }}>
-              {property.neighborhood}, {property.city}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 mb-3" style={{ color: '#888880' }}>
-            {[
-              { icon: <Bed size={12} />, val: `${property.beds} Bed` },
-              { icon: <Bath size={12} />, val: `${property.baths} Bath` },
-              { icon: <Square size={12} />, val: `${property.sqft.toLocaleString()} sq ft` },
-            ].map((s, i) => (
-              <span key={i} className="flex items-center gap-1" style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.06em' }}>
-                {s.icon} {s.val}
-              </span>
-            ))}
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
-            {property.tags.map((tag) => (
-              <span key={tag} style={{
-                padding: '3px 9px',
-                border: '1px solid rgba(10,10,10,0.1)',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 9, letterSpacing: '0.1em',
-                textTransform: 'uppercase', color: '#888880',
-              }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// ─── Featured Hero Card ────────────────────────────────────────────────────────
-function FeaturedCard({ property }: { property: typeof PROPERTIES[0] }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <motion.div
-      initial="hidden" whileInView="visible" viewport={{ once: true }}
-      variants={fadeUp} custom={0}
-      className="col-span-full"
-    >
-      <Link href={`/properties/${property.slug}`} className="block">
-        <div
-          className="relative overflow-hidden"
-          style={{ height: 'clamp(320px, 45vw, 520px)' }}
-          onMouseEnter={() => setHov(true)}
-          onMouseLeave={() => setHov(false)}
-        >
-          <motion.div
-            className="absolute inset-0"
-            animate={{ scale: hov ? 1.04 : 1 }}
-            transition={{ duration: 1, ease: EASE }}
-          >
-            <Image
-              src={property.image} alt={property.title}
-              fill className="object-cover"
-              sizes="100vw" priority
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-12">
-            <div className="flex gap-2 mb-4">
-              <span style={{ padding: '4px 12px', backgroundColor: '#c8a96e', color: '#fafaf8', fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600 }}>
-                Featured
-              </span>
-              <span style={{ padding: '4px 12px', backgroundColor: 'rgba(255,255,255,0.15)', color: '#fff', fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600, backdropFilter: 'blur(4px)' }}>
-                {property.type}
-              </span>
-            </div>
-            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(28px, 4vw, 52px)', fontWeight: 700, color: '#fafaf8', lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 10 }}>
-              {property.title}
-            </h2>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.65)', fontWeight: 300, marginBottom: 20, maxWidth: 420 }}>
-              {property.description}
-            </p>
-            <div className="flex items-center justify-between">
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 32, fontWeight: 700, color: '#c8a96e', lineHeight: 1 }}>
-                {property.priceLabel}
-              </p>
-              <motion.span
-                animate={{ x: hov ? 0 : -8, opacity: hov ? 1 : 0 }}
-                transition={{ duration: 0.3, ease: EASE }}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', backgroundColor: '#fafaf8', color: '#0a0a0a', fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600 }}
-              >
-                View Property <ArrowRight size={12} />
-              </motion.span>
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// ─── Filter Bar ────────────────────────────────────────────────────────────────
-function FilterBar({
-  search, setSearch,
-  type, setType,
-  status, setStatus,
-  sort, setSort,
-  resultCount,
-  filtersOpen, setFiltersOpen,
-}: {
-  search: string; setSearch: (v: string) => void;
-  type: string; setType: (v: string) => void;
-  status: string; setStatus: (v: string) => void;
-  sort: string; setSort: (v: string) => void;
-  resultCount: number;
-  filtersOpen: boolean; setFiltersOpen: (v: boolean) => void;
-}) {
-  return (
-    <div>
-      {/* Main search row */}
-      <div className="flex gap-0" style={{ border: '1px solid rgba(10,10,10,0.12)', backgroundColor: '#fafaf8' }}>
-        {/* Search input */}
-        <div className="flex items-center gap-3 flex-1 px-4 py-3" style={{ borderRight: '1px solid rgba(10,10,10,0.10)' }}>
-          <Search size={14} style={{ color: '#b8b5ae', flexShrink: 0 }} />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name, neighbourhood, city…"
-            style={{
-              flex: 1, background: 'none', border: 'none', outline: 'none',
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300,
-              color: '#0a0a0a', caretColor: '#c8a96e',
-            }}
-          />
-          {search && (
-            <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#b8b5ae', display: 'flex' }}>
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        {/* Filter toggle */}
-        <button
-          onClick={() => setFiltersOpen(!filtersOpen)}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 8,
-            padding: '12px 20px', background: filtersOpen ? '#0a0a0a' : 'none',
-            border: 'none', cursor: 'pointer', transition: 'all 0.25s',
-            fontFamily: "'DM Sans', sans-serif", fontSize: 10,
-            letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600,
-            color: filtersOpen ? '#fafaf8' : '#888880',
-          }}
-        >
-          <SlidersHorizontal size={13} />
-          Filters
-        </button>
-      </div>
-
-      {/* Expanded filters */}
-      <AnimatePresence>
-        {filtersOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            style={{ overflow: 'hidden' }}
-          >
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: 0,
-              border: '1px solid rgba(10,10,10,0.12)',
-              borderTop: 'none',
-              backgroundColor: '#f3f1ed',
-            }}>
-              {/* Type */}
-              <div style={{ padding: '16px 20px', borderRight: '1px solid rgba(10,10,10,0.08)' }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#b8b5ae', marginBottom: 10, fontWeight: 600 }}>Type</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {TYPES.map((t) => (
-                    <button key={t} onClick={() => setType(t)} style={{
-                      padding: '4px 10px',
-                      border: `1px solid ${type === t ? 'rgba(200,169,110,0.5)' : 'rgba(10,10,10,0.10)'}`,
-                      backgroundColor: type === t ? 'rgba(200,169,110,0.12)' : 'rgba(0,0,0,0)',
-                      color: type === t ? '#c8a96e' : '#888880',
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.08em',
-                      cursor: 'pointer', transition: 'all 0.2s', fontWeight: type === t ? 600 : 400,
-                    }}>
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Status */}
-              <div style={{ padding: '16px 20px', borderRight: '1px solid rgba(10,10,10,0.08)' }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#b8b5ae', marginBottom: 10, fontWeight: 600 }}>Status</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {STATUSES.map((s) => (
-                    <button key={s} onClick={() => setStatus(s)} style={{
-                      padding: '4px 10px',
-                      border: `1px solid ${status === s ? 'rgba(200,169,110,0.5)' : 'rgba(10,10,10,0.10)'}`,
-                      backgroundColor: status === s ? 'rgba(200,169,110,0.12)' : 'rgba(0,0,0,0)',
-                      color: status === s ? '#c8a96e' : '#888880',
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.08em',
-                      cursor: 'pointer', transition: 'all 0.2s', fontWeight: status === s ? 600 : 400,
-                    }}>
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Sort */}
-              <div style={{ padding: '16px 20px' }}>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#b8b5ae', marginBottom: 10, fontWeight: 600 }}>Sort By</p>
-                <div className="relative" style={{ display: 'inline-block' }}>
-                  <select
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                    style={{
-                      appearance: 'none', padding: '6px 28px 6px 10px',
-                      border: '1px solid rgba(10,10,10,0.12)',
-                      backgroundColor: '#fafaf8', color: '#0a0a0a',
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 11,
-                      outline: 'none', cursor: 'pointer',
-                    }}
-                  >
-                    {SORT_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-                  </select>
-                  <ChevronDown size={12} style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: '#888880', pointerEvents: 'none' }} />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Result count */}
-      <div className="flex items-center justify-between mt-4">
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#b8b5ae', letterSpacing: '0.06em' }}>
-          Showing <strong style={{ color: '#0a0a0a' }}>{resultCount}</strong> properties
-        </p>
-        {(search || type !== 'All' || status !== 'All') && (
-          <button
-            onClick={() => { setSearch(''); setType('All'); setStatus('All'); }}
-            style={{ display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#c8a96e' }}
-          >
-            <X size={11} /> Clear filters
-          </button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ─── Main Page ─────────────────────────────────────────────────────────────────
-export default function PropertiesPage() {
-  const [search, setSearch]           = useState('');
-  const [type, setType]               = useState('All');
-  const [status, setStatus]           = useState('All');
-  const [sort, setSort]               = useState('Default');
-  const [filtersOpen, setFiltersOpen] = useState(false);
-
-  const headerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: headerRef, offset: ['start start', 'end start'] });
-  const wmY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
-  // Filter + sort
-  const filtered = useMemo(() => {
-    let list = [...PROPERTIES];
-    if (search)       list = list.filter((p) => [p.title, p.neighborhood, p.city, p.type].join(' ').toLowerCase().includes(search.toLowerCase()));
-    if (type !== 'All')   list = list.filter((p) => p.type === type);
-    if (status !== 'All') list = list.filter((p) => status === 'For Sale' ? p.status === 'for-sale' : p.status === 'for-rent');
-    if (sort === 'Price: Low to High') list.sort((a, b) => a.price - b.price);
-    if (sort === 'Price: High to Low') list.sort((a, b) => b.price - a.price);
-    return list;
-  }, [search, type, status, sort]);
-
-  const featured = filtered.find((p) => p.featured) || null;
-  const rest     = filtered.filter((p) => !p.featured || filtered.indexOf(p) > 0);
+  const images = property.images && property.images.length > 0 ? property.images : [property.image || '/cloud.jpeg'];
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
         * { box-sizing: border-box; }
-        body { background: #fafaf8; }
-        ::placeholder { color: #b8b5ae; }
+        body { background: #ffffff; color: #0a0a0a; }
         a { text-decoration: none; color: inherit; }
+        .glass-card {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(0, 0, 0, 0.05);
+          box-shadow: 0 24px 64px -16px rgba(0,0,0,0.06);
+        }
       `}</style>
 
-      <main style={{ backgroundColor: '#fafaf8', minHeight: '100vh' }}>
+      {/* Top progress bar */}
+      <motion.div
+        style={{ scaleX, transformOrigin: '0%', position: 'fixed', top: 0, left: 0, right: 0, height: 4, background: '#c8a96e', zIndex: 100 }}
+      />
 
-        {/* ── Hero Header ── */}
-        <header ref={headerRef} style={{ position: 'relative', overflow: 'hidden', paddingTop: 140, paddingBottom: 80, borderBottom: '1px solid rgba(10,10,10,0.08)' }}>
+      <main ref={containerRef} style={{ backgroundColor: '#ffffff', minHeight: '100vh', position: 'relative' }}>
+        
+        {/* Back Link */}
+        <div style={{ position: 'absolute', top: 120, left: 40, zIndex: 50 }}>
+          <Link href="/properties" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600, color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.4)', transition: 'opacity 0.2s' }}>
+            <ChevronLeft size={16} /> Back to Portfolio
+          </Link>
+        </div>
 
-          {/* Parallax watermark */}
-          <motion.div
-            style={{ y: wmY, position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', zIndex: 0 }}
-          >
-            <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(80px, 18vw, 240px)', fontWeight: 900, color: 'rgba(10,10,10,0.03)', whiteSpace: 'nowrap', userSelect: 'none', lineHeight: 1 }}>
-              Properties
-            </span>
-          </motion.div>
-
-          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 32 }}>
-
-              <div>
-                {/* Label */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
-                  <motion.span
-                    custom={0} initial="hidden" animate="visible" variants={fadeLeft}
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#b8b5ae', fontWeight: 600 }}
-                  >
-                    Our Portfolio
-                  </motion.span>
-                  <motion.div
-                    custom={0.1} initial="hidden" animate="visible" variants={lineGrow}
-                    style={{ height: 1, width: 48, backgroundColor: '#c8a96e', transformOrigin: 'left' }}
-                  />
-                </div>
-
-                {/* Heading */}
-                <motion.h1
-                  custom={0.15} initial="hidden" animate="visible" variants={fadeUp}
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(40px, 6vw, 80px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.025em', color: '#0a0a0a', margin: 0 }}
-                >
-                  Curated
-                  <br />
-                  <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#b8b5ae' }}>Properties</em>
-                </motion.h1>
-              </div>
-
-              <motion.p
-                custom={0.3} initial="hidden" animate="visible" variants={fadeUp}
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 300, color: '#888880', lineHeight: 1.8, maxWidth: 320 }}
-              >
-                An exclusive selection of luxury homes, villas, and investment properties across India's most coveted addresses.
-              </motion.p>
-            </div>
-
-            {/* Stats row */}
-            <motion.div
-              custom={0.4} initial="hidden" animate="visible" variants={fadeUp}
-              style={{ display: 'flex', gap: 0, marginTop: 56, borderTop: '1px solid rgba(10,10,10,0.08)', paddingTop: 32 }}
-            >
-              {[
-                { n: PROPERTIES.length, label: 'Listings' },
-                { n: PROPERTIES.filter((p) => p.status === 'for-sale').length, label: 'For Sale' },
-                { n: PROPERTIES.filter((p) => p.status === 'for-rent').length, label: 'For Rent' },
-                { n: PROPERTIES.filter((p) => p.featured).length, label: 'Featured' },
-              ].map((s, i) => (
-                <div key={i} style={{ flex: 1, paddingRight: 24, borderRight: i < 3 ? '1px solid rgba(10,10,10,0.08)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
-                  <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(28px, 3vw, 44px)', fontWeight: 700, color: '#0a0a0a', lineHeight: 1, margin: '0 0 4px' }}>{s.n}</p>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#b8b5ae', margin: 0, fontWeight: 600 }}>{s.label}</p>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </header>
-
-        {/* ── Content ── */}
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 32px 120px' }}>
-
-          {/* Filter bar */}
-          <motion.div custom={0} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} style={{ marginBottom: 48 }}>
-            <FilterBar
-              search={search} setSearch={setSearch}
-              type={type} setType={setType}
-              status={status} setStatus={setStatus}
-              sort={sort} setSort={setSort}
-              resultCount={filtered.length}
-              filtersOpen={filtersOpen} setFiltersOpen={setFiltersOpen}
+        {/* ── Immersive Hero ── */}
+        <section style={{ position: 'relative', width: '100vw', height: '80vh', overflow: 'hidden', minHeight: 600 }}>
+          <motion.div style={{ y: heroY, opacity: heroOpacity, position: 'absolute', inset: 0 }}>
+            <Image
+              src={images[0]}
+              alt={property.title}
+              fill
+              className="object-cover"
+              priority
+              quality={100}
             />
+            {/* Soft gradient bottom to blend into white */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 30%, rgba(255,255,255,0) 70%, #ffffff 100%)' }} />
           </motion.div>
+        </section>
 
-          {/* No results */}
-          <AnimatePresence mode="wait">
-            {filtered.length === 0 && (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: EASE }}
-                style={{ textAlign: 'center', padding: '80px 0' }}
-              >
-                <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontStyle: 'italic', color: '#b8b5ae', marginBottom: 12 }}>
-                  No properties found
+        {/* ── Content Grid ── */}
+        <section style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px', position: 'relative', zIndex: 10, marginTop: -140 }}>
+          <div style={{ display: 'flex', gap: 64, flexDirection: 'row', flexWrap: 'wrap' }}>
+            
+            {/* Left: Main Details */}
+            <div style={{ flex: '1 1 600px' }}>
+              <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: EASE }}>
+                
+                {/* Status & Type */}
+                <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
+                  <span style={{ padding: '6px 14px', backgroundColor: '#0a0a0a', color: '#ffffff', fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    {property.status === 'for-sale' ? 'For Sale' : 'For Rent'}
+                  </span>
+                  <span style={{ padding: '6px 14px', backgroundColor: 'rgba(0,0,0,0.05)', color: '#0a0a0a', fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    {property.type}
+                  </span>
+                </div>
+
+                <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(48px, 6vw, 72px)', fontWeight: 900, lineHeight: 1, letterSpacing: '-0.02em', color: '#0a0a0a', marginBottom: 24 }}>
+                  {property.title}
+                </h1>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#888880', fontFamily: "'DM Sans', sans-serif", fontSize: 14, letterSpacing: '0.04em', marginBottom: 64 }}>
+                  <MapPin size={18} />
+                  <span>{property.address || `${property.neighborhood}, ${property.city}`}</span>
+                </div>
+
+                {/* Key Metrics */}
+                <div style={{ display: 'flex', gap: 40, padding: '40px 0', borderTop: '1px solid rgba(0,0,0,0.08)', borderBottom: '1px solid rgba(0,0,0,0.08)', marginBottom: 64, flexWrap: 'wrap' }}>
+                  {[
+                    { icon: <Bed size={20} />, label: 'Bedrooms', val: property.beds },
+                    { icon: <Bath size={20} />, label: 'Bathrooms', val: property.baths },
+                    { icon: <Square size={20} />, label: 'Area', val: `${(property.sqft || 0).toLocaleString()} sqft` },
+                    { icon: <Car size={20} />, label: 'Parking', val: property.parking || '-' },
+                  ].map((m, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+                      <div style={{ color: '#c8a96e', marginTop: 2 }}>{m.icon}</div>
+                      <div>
+                        <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 24, fontWeight: 700, lineHeight: 1, color: '#0a0a0a', margin: '0 0 6px' }}>{m.val}</p>
+                        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#888880', margin: 0, fontWeight: 500 }}>{m.label}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Description */}
+                <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontWeight: 700, color: '#0a0a0a', marginBottom: 24 }}>About this property</h3>
+                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, lineHeight: 1.8, color: '#4a4a4a', fontWeight: 300, marginBottom: 64, whiteSpace: 'pre-line' }}>
+                  {property.description}
                 </p>
-                <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#b8b5ae', marginBottom: 24 }}>
-                  Try adjusting your search or filters
-                </p>
-                <button
-                  onClick={() => { setSearch(''); setType('All'); setStatus('All'); }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 22px', border: '1px solid rgba(10,10,10,0.15)', backgroundColor: 'rgba(0,0,0,0)', color: '#0a0a0a', fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', fontWeight: 600, cursor: 'pointer' }}
-                >
-                  Clear all filters
-                </button>
-              </motion.div>
-            )}
 
-            {filtered.length > 0 && (
-              <motion.div key="results" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-
-                {/* Featured hero (first featured property) */}
-                {featured && (
-                  <div style={{ marginBottom: 48 }}>
-                    <FeaturedCard property={featured} />
+                {/* Features & Amenities */}
+                {property.amenities && property.amenities.length > 0 && (
+                  <div style={{ marginBottom: 80 }}>
+                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontWeight: 700, color: '#0a0a0a', marginBottom: 32 }}>Features & Amenities</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 20 }}>
+                      {property.amenities.map((amenity, idx) => (
+                        <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 24, height: 24, borderRadius: '50%', backgroundColor: 'rgba(200,169,110,0.1)', color: '#c8a96e' }}>
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#0a0a0a', fontWeight: 400 }}>{amenity}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                {/* Property grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(320px, 100%), 1fr))', gap: '48px 32px' }}>
-                  {rest.map((p, i) => (
-                    <PropertyCard key={p.id} property={p} index={i} />
-                  ))}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                {/* Location Map */}
+                {property.coordinates && (
+                  <div style={{ marginBottom: 80 }}>
+                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontWeight: 700, color: '#0a0a0a', marginBottom: 32 }}>Location</h3>
+                    <div style={{ position: 'relative', width: '100%', height: 440, borderRadius: 12, overflow: 'hidden', backgroundColor: '#fcfcfc', border: '1px solid rgba(0,0,0,0.06)' }}>
+                      <Map
+                        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                        initialViewState={{
+                          longitude: property.coordinates[0],
+                          latitude: property.coordinates[1],
+                          zoom: 14.5
+                        }}
+                        mapStyle="mapbox://styles/mapbox/light-v11"
+                        scrollZoom={false}
+                      >
+                        <Marker longitude={property.coordinates[0]} latitude={property.coordinates[1]} anchor="bottom">
+                          <div style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            width: 56, height: 56, borderRadius: '50%', backgroundColor: 'rgba(200,169,110,0.15)',
+                            animation: 'pulse 2s infinite'
+                          }}>
+                            <div style={{
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              width: 32, height: 32, borderRadius: '50%', backgroundColor: '#c8a96e', color: '#ffffff',
+                              boxShadow: '0 8px 24px rgba(200,169,110,0.4)'
+                            }}>
+                              <MapPin size={16} strokeWidth={2.5} />
+                            </div>
+                          </div>
+                        </Marker>
+                      </Map>
+                      
+                      <a 
+                        href={`https://www.google.com/maps/search/?api=1&query=${property.coordinates[1]},${property.coordinates[0]}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ 
+                          position: 'absolute', bottom: 20, right: 20, display: 'flex', alignItems: 'center', gap: 8,
+                          padding: '12px 18px', backgroundColor: '#0a0a0a', color: '#ffffff', borderRadius: 4,
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.14em', 
+                          textTransform: 'uppercase', fontWeight: 600, boxShadow: '0 12px 32px rgba(0,0,0,0.15)',
+                          transition: 'all 0.2s', textDecoration: 'none'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1a1a1a'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0a0a0a'}
+                      >
+                        Get Directions <ExternalLink size={12} />
+                      </a>
+                    </div>
+                  </div>
+                )}
 
-          {/* Bottom CTA */}
-          {filtered.length > 0 && (
-            <motion.div
-              custom={0.2} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
-              style={{ marginTop: 80, paddingTop: 40, borderTop: '1px solid rgba(10,10,10,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}
-            >
-              <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontStyle: 'italic', fontSize: 16, color: '#b8b5ae' }}>
-                Can't find what you're looking for?
-              </p>
-              <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600, color: '#0a0a0a' }}>
-                Talk to an Agent
-                <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, border: '1px solid #0a0a0a', overflow: 'hidden' }}>
-                  <ArrowRight size={14} />
-                </span>
-              </Link>
-            </motion.div>
-          )}
-        </div>
+                {/* Image Gallery */}
+                {images.length > 1 && (
+                  <div style={{ marginBottom: 120 }}>
+                    <h3 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 28, fontWeight: 700, color: '#0a0a0a', marginBottom: 32 }}>Gallery</h3>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                      {images.slice(1).map((img, idx) => (
+                        <div key={idx} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 4, overflow: 'hidden', backgroundColor: '#f5f5f5' }}>
+                          <Image src={img} alt={`${property.title} gallery ${idx + 1}`} fill className="object-cover hover:scale-105 transition-transform duration-700" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+              </motion.div>
+            </div>
+
+            {/* Right: Sticky Glass Panel */}
+            <div style={{ flex: '1 1 360px', maxWidth: 420 }}>
+              <div style={{ position: 'sticky', top: 120, paddingBottom: 60 }}>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.2, ease: EASE }}
+                  className="glass-card"
+                  style={{ padding: 40, borderRadius: 16 }}
+                >
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#888880', fontWeight: 600, marginBottom: 8 }}>
+                    Current Value
+                  </p>
+                  <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 44, fontWeight: 700, color: '#c8a96e', lineHeight: 1, marginBottom: 32 }}>
+                    {property.priceLabel || `₹${(property.price || 0).toLocaleString()}`}
+                  </h2>
+
+                  {/* Agent block */}
+                  {property.agent && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 32, paddingBottom: 32, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div style={{ position: 'relative', width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', backgroundColor: '#eaeaea' }}>
+                        <Image src={property.agent.photo || '/cloud.jpeg'} alt={property.agent.name} fill className="object-cover" />
+                      </div>
+                      <div>
+                        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#b8b5ae', margin: '0 0 4px', fontWeight: 600 }}>Listed By</p>
+                        <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 18, fontWeight: 700, color: '#0a0a0a', margin: 0 }}>{property.agent.name}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <button onClick={() => openScheduleModal(property.title)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '16px', backgroundColor: '#0a0a0a', color: '#ffffff', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, transition: 'all 0.2s', borderRadius: 4 }}>
+                      <Calendar size={16} /> Schedule a Tour
+                    </button>
+                    <button onClick={() => openCallOptions()} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '16px', backgroundColor: 'transparent', color: '#0a0a0a', border: '1px solid #0a0a0a', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, transition: 'all 0.2s', borderRadius: 4 }}>
+                      Contact Agent
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+          </div>
+        </section>
       </main>
     </>
   );

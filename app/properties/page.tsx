@@ -33,88 +33,13 @@ const lineGrow = {
 };
 
 // ─── Mock Data ─────────────────────────────────────────────────────────────────
-const PROPERTIES = [
-  {
-    id: '1', slug: 'imperial-heights-bandra',
-    title: 'Imperial Heights', neighborhood: 'Bandra West', city: 'Mumbai',
-    type: 'Penthouse', status: 'for-sale' as const, featured: true,
-    beds: 4, baths: 4, sqft: 4200, price: 85000000,
-    priceLabel: '₹8.5 Cr',
-    tags: ['Sea View', 'Private Pool', 'Smart Home'],
-    image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=80',
-    description: 'Iconic sea-facing penthouse with panoramic views of the Arabian Sea.',
-  },
-  {
-    id: '2', slug: 'verde-villa-juhu',
-    title: 'Verde Villa', neighborhood: 'Juhu', city: 'Mumbai',
-    type: 'Villa', status: 'for-sale' as const, featured: false,
-    beds: 5, baths: 5, sqft: 6800, price: 120000000,
-    priceLabel: '₹12 Cr',
-    tags: ['Private Garden', 'Infinity Pool', 'Home Theatre'],
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80',
-    description: 'A sprawling villa retreat hidden amongst Juhu\'s quiet lanes.',
-  },
-  {
-    id: '3', slug: 'marina-residences-worli',
-    title: 'Marina Residences', neighborhood: 'Worli', city: 'Mumbai',
-    type: 'Apartment', status: 'for-sale' as const, featured: true,
-    beds: 3, baths: 3, sqft: 2800, price: 45000000,
-    priceLabel: '₹4.5 Cr',
-    tags: ['Sea Link View', 'Concierge', 'Gym'],
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80',
-    description: 'Contemporary residences overlooking the iconic Bandra–Worli Sea Link.',
-  },
-  {
-    id: '4', slug: 'sky-loft-lower-parel',
-    title: 'Sky Loft', neighborhood: 'Lower Parel', city: 'Mumbai',
-    type: 'Apartment', status: 'for-rent' as const, featured: false,
-    beds: 2, baths: 2, sqft: 1650, price: 180000,
-    priceLabel: '₹1.8L/mo',
-    tags: ['City View', 'Co-working', 'Rooftop'],
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
-    description: 'Industrial-chic loft in the heart of Mumbai\'s commercial district.',
-  },
-  {
-    id: '5', slug: 'the-grove-alibaug',
-    title: 'The Grove', neighborhood: 'Alibaug', city: 'Raigad',
-    type: 'Villa', status: 'for-sale' as const, featured: false,
-    beds: 4, baths: 4, sqft: 5500, price: 38000000,
-    priceLabel: '₹3.8 Cr',
-    tags: ['Farmhouse', 'Orchard', 'Private Beach'],
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&q=80',
-    description: 'A secluded coastal estate nestled within a private mango grove.',
-  },
-  {
-    id: '6', slug: 'downtown-studio-bkc',
-    title: 'Downtown Studio', neighborhood: 'BKC', city: 'Mumbai',
-    type: 'Apartment', status: 'for-rent' as const, featured: false,
-    beds: 1, baths: 1, sqft: 680, price: 75000,
-    priceLabel: '₹75K/mo',
-    tags: ['Furnished', 'Metro Access', 'Serviced'],
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80',
-    description: 'A fully furnished studio in Mumbai\'s premium business district.',
-  },
-  {
-    id: '7', slug: 'pali-hill-bungalow',
-    title: 'Pali Hill Bungalow', neighborhood: 'Pali Hill', city: 'Mumbai',
-    type: 'Estate', status: 'for-sale' as const, featured: true,
-    beds: 6, baths: 7, sqft: 9200, price: 220000000,
-    priceLabel: '₹22 Cr',
-    tags: ['Heritage', 'Garden', 'Staff Quarters'],
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80',
-    description: 'A grand colonial bungalow set within mature gardens on Pali Hill.',
-  },
-  {
-    id: '8', slug: 'versova-townhouse',
-    title: 'Versova Townhouse', neighborhood: 'Versova', city: 'Mumbai',
-    type: 'Townhouse', status: 'for-sale' as const, featured: false,
-    beds: 3, baths: 3, sqft: 2100, price: 32000000,
-    priceLabel: '₹3.2 Cr',
-    tags: ['Beach Proximity', 'Duplex', 'Terrace'],
-    image: 'https://images.unsplash.com/photo-1567496898669-ee935f5f647a?w=800&q=80',
-    description: 'A contemporary duplex townhouse steps from Versova beach.',
-  },
-];
+import { properties as dataProperties } from '@/data/properties';
+
+const PROPERTIES = dataProperties.map(p => ({
+  ...p,
+  image: p.images?.[0] || '/cloud.jpeg',
+  type: p.type.charAt(0).toUpperCase() + p.type.slice(1),
+}));
 
 const TYPES   = ['All', 'Apartment', 'Villa', 'Penthouse', 'Estate', 'Townhouse'];
 const STATUSES = ['All', 'For Sale', 'For Rent'];
@@ -554,26 +479,31 @@ export default function PropertiesPage() {
       <main style={{ backgroundColor: '#fafaf8', minHeight: '100vh' }}>
 
         {/* ── Hero Header ── */}
-        <header ref={headerRef} style={{ position: 'relative', overflow: 'hidden', paddingTop: 140, paddingBottom: 80, borderBottom: '1px solid rgba(10,10,10,0.08)' }}>
+        <header ref={headerRef} style={{ position: 'relative', overflow: 'hidden', height: '60vh', minHeight: 480, display: 'flex', alignItems: 'flex-end', paddingBottom: 64 }}>
 
-          {/* Parallax watermark */}
+          {/* Parallax Building Image */}
           <motion.div
-            style={{ y: wmY, position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', zIndex: 0 }}
+            style={{ y: wmY, position: 'absolute', inset: '-10%', zIndex: 0 }}
           >
-            <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(80px, 18vw, 240px)', fontWeight: 900, color: 'rgba(10,10,10,0.03)', whiteSpace: 'nowrap', userSelect: 'none', lineHeight: 1 }}>
-              Properties
-            </span>
+            <Image 
+              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+              alt="KingSquare Properties Portfolio"
+              fill
+              className="object-cover"
+              priority
+            />
+            <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.4) 50%, rgba(10,10,10,0.1) 100%)' }} />
           </motion.div>
 
-          <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 32px', position: 'relative', zIndex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 32 }}>
+          <div style={{ maxWidth: 1280, width: '100%', margin: '0 auto', padding: '0 32px', position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyItems: 'space-between', flexDirection: 'row', flexWrap: 'wrap', gap: 32, justifyContent: 'space-between' }}>
 
               <div>
                 {/* Label */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
                   <motion.span
                     custom={0} initial="hidden" animate="visible" variants={fadeLeft}
-                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#b8b5ae', fontWeight: 600 }}
+                    style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.8)', fontWeight: 600 }}
                   >
                     Our Portfolio
                   </motion.span>
@@ -586,17 +516,17 @@ export default function PropertiesPage() {
                 {/* Heading */}
                 <motion.h1
                   custom={0.15} initial="hidden" animate="visible" variants={fadeUp}
-                  style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(40px, 6vw, 80px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.025em', color: '#0a0a0a', margin: 0 }}
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(40px, 6vw, 80px)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.025em', color: '#ffffff', margin: 0 }}
                 >
                   Curated
                   <br />
-                  <em style={{ fontStyle: 'italic', fontWeight: 400, color: '#b8b5ae' }}>Properties</em>
+                  <em style={{ fontStyle: 'italic', fontWeight: 400, color: 'rgba(255,255,255,0.6)' }}>Properties</em>
                 </motion.h1>
               </div>
 
               <motion.p
                 custom={0.3} initial="hidden" animate="visible" variants={fadeUp}
-                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 300, color: '#888880', lineHeight: 1.8, maxWidth: 320 }}
+                style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 300, color: 'rgba(255,255,255,0.7)', lineHeight: 1.8, maxWidth: 320, paddingBottom: 16 }}
               >
                 An exclusive selection of luxury homes, villas, and investment properties across India's most coveted addresses.
               </motion.p>
@@ -605,7 +535,7 @@ export default function PropertiesPage() {
             {/* Stats row */}
             <motion.div
               custom={0.4} initial="hidden" animate="visible" variants={fadeUp}
-              style={{ display: 'flex', gap: 0, marginTop: 56, borderTop: '1px solid rgba(10,10,10,0.08)', paddingTop: 32 }}
+              style={{ display: 'flex', gap: 0, marginTop: 40, borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: 24 }}
             >
               {[
                 { n: PROPERTIES.length, label: 'Listings' },
@@ -613,9 +543,9 @@ export default function PropertiesPage() {
                 { n: PROPERTIES.filter((p) => p.status === 'for-rent').length, label: 'For Rent' },
                 { n: PROPERTIES.filter((p) => p.featured).length, label: 'Featured' },
               ].map((s, i) => (
-                <div key={i} style={{ flex: 1, paddingRight: 24, borderRight: i < 3 ? '1px solid rgba(10,10,10,0.08)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
-                  <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(28px, 3vw, 44px)', fontWeight: 700, color: '#0a0a0a', lineHeight: 1, margin: '0 0 4px' }}>{s.n}</p>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#b8b5ae', margin: 0, fontWeight: 600 }}>{s.label}</p>
+                <div key={i} style={{ flex: 1, paddingRight: 24, borderRight: i < 3 ? '1px solid rgba(255,255,255,0.15)' : 'none', paddingLeft: i > 0 ? 24 : 0 }}>
+                  <p style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 700, color: '#ffffff', lineHeight: 1, margin: '0 0 4px' }}>{s.n}</p>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)', margin: 0, fontWeight: 600 }}>{s.label}</p>
                 </div>
               ))}
             </motion.div>
