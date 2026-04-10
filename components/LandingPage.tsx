@@ -495,10 +495,10 @@ export default function LandingPage() {
           {/* Hero Text */}
           <div ref={textRef} style={{ position: "absolute", top: "14%", left: 0, right: 0, textAlign: "center", zIndex: 8, padding: "0 clamp(16px, 5vw, 80px)", willChange: "transform,opacity" }}>
             <h1 className="hero-title" style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(2.4rem,9vw,7.8rem)", fontWeight: 700, color: "#fff", lineHeight: 0.94, letterSpacing: "-0.01em", margin: "0 0 1.3rem 0", textShadow: "0 4px 40px rgba(0,0,0,.6)" }}>
-              Find What Moves You
+              KING SQUARE
             </h1>
             <p className="hero-subtitle" style={{ fontSize: "clamp(0.875rem,1.55vw,1.2rem)", color: "rgba(255,255,255,.9)", margin: "0 0 2.2rem 0", fontWeight: 400, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,.6)" }}>
-              <span style={{ fontWeight: 600, color: "#fff" }}>Expert agents. Real guidance.</span>{" "}
+              <span style={{ fontWeight: 600, color: "#fff" }}>Your Kingdom. Your Address.</span>{" "}
               <span>A clear path to find what's next.</span>
             </p>
           </div>

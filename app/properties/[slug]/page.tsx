@@ -11,7 +11,7 @@ import { useCallStore } from '@/store/callStore';
 import Map, { Marker } from 'react-map-gl/mapbox';
 
 
-const EASE = [0.22, 1, 0.36, 1];
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 export default function PropertyDetailPage(props: { params: Promise<{ slug: string }> }) {
   const params = use(props.params);
@@ -32,7 +32,7 @@ export default function PropertyDetailPage(props: { params: Promise<{ slug: stri
   const openScheduleModal = useCallStore((s) => s.openScheduleModal);
   const openCallOptions = useCallStore((s) => s.openCallOptions);
 
-  const images = property.images && property.images.length > 0 ? property.images : [property.image || '/cloud.jpeg'];
+  const images = property.images && property.images.length > 0 ? property.images : ['/cloud.jpeg'];
 
   return (
     <>

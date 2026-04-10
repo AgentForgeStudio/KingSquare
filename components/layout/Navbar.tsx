@@ -8,18 +8,18 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ── Tokens ────────────────────────────────────────────────────────
-const GOLD   = '#C9A84C';
+const GOLD = '#C9A84C';
 const GOLD_B = 'rgba(201,168,76,0.35)';
-const EASE   = [0.22, 1, 0.36, 1] as const;
-const serif  = "'Cormorant Garamond','Playfair Display',Georgia,serif";
-const sans   = "'Helvetica Neue',Arial,sans-serif";
+const EASE = [0.22, 1, 0.36, 1] as const;
+const serif = "'Cormorant Garamond','Playfair Display',Georgia,serif";
+const sans = "'Helvetica Neue',Arial,sans-serif";
 
 const navLinks = [
-  { href: '/',           label: 'Home',       icon: Home },
+  { href: '/', label: 'Home', icon: Home },
   { href: '/properties', label: 'Properties', icon: Building2 },
-  { href: '/about',      label: 'About',      icon: Info },
-  { href: '/blog',       label: 'Blog',       icon: Newspaper },
-  { href: '/contact',    label: 'Contact',    icon: MessageCircle },
+  { href: '/about', label: 'About', icon: Info },
+  { href: '/blog', label: 'Blog', icon: Newspaper },
+  { href: '/contact', label: 'Contact', icon: MessageCircle },
 ] as const;
 
 // ── Hide on scroll-down, show on scroll-up ────────────────────────
@@ -95,8 +95,10 @@ function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
       <motion.span
         animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
         transition={{ duration: 0.38, ease: EASE }}
-        style={{ display: 'block', width: 20, height: 1.5,
-          background: open ? GOLD : '#fff', marginBottom: 5, transformOrigin: 'center' }}
+        style={{
+          display: 'block', width: 20, height: 1.5,
+          background: open ? GOLD : '#fff', marginBottom: 5, transformOrigin: 'center'
+        }}
       />
       <motion.span
         animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
@@ -106,8 +108,10 @@ function Hamburger({ open, onClick }: { open: boolean; onClick: () => void }) {
       <motion.span
         animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
         transition={{ duration: 0.38, ease: EASE }}
-        style={{ display: 'block', width: 20, height: 1.5,
-          background: open ? GOLD : '#fff', transformOrigin: 'center' }}
+        style={{
+          display: 'block', width: 20, height: 1.5,
+          background: open ? GOLD : '#fff', transformOrigin: 'center'
+        }}
       />
     </button>
   );
@@ -126,8 +130,10 @@ function MobileMenu({ open, pathname, onClose, onCall }: {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={onClose}
-            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
-              backdropFilter: 'blur(8px)', zIndex: 88 }}
+            style={{
+              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+              backdropFilter: 'blur(8px)', zIndex: 88
+            }}
           />
           <motion.div
             key="panel"
@@ -219,7 +225,7 @@ function MobileMenu({ open, pathname, onClose, onCall }: {
 
 // ── Main Navbar ───────────────────────────────────────────────────
 export function Navbar() {
-  const pathname        = usePathname();
+  const pathname = usePathname();
   const openCallOptions = useCallStore((s) => s.openCallOptions);
   const [menuOpen, setMenuOpen] = useState(false);
   const visible = useScrollVisibility();
@@ -298,10 +304,10 @@ export function Navbar() {
         <Link href="/" style={{ textDecoration: 'none', flexShrink: 0, display: 'flex', alignItems: 'center' }}>
           <img
             src="./rm.png"
-            alt="Logo"
+            alt="KingSquare Logo"
             style={{
-              height: 128,           /* ← bigger */
-              width: 120,
+              height: 88,           /* ← bigger */
+              width: 80,
               objectFit: 'contain',
               filter: 'drop-shadow(0 2px 12px rgba(0,0,0,0.6))',  /* keeps it visible on any bg */
             }}
@@ -325,7 +331,7 @@ export function Navbar() {
         {/* ── Talk to Agent CTA (desktop) ── */}
         <button className="ks-cta ks-desktop   " onClick={openCallOptions}>
           <PhoneCall size={14} />
-         <span className='font-bold '> Talk to Agent</span>
+          <span className='font-bold '> Talk to Agent</span>
         </button>
 
         {/* ── Talk to Agent (mobile — compact) + hamburger ── */}
