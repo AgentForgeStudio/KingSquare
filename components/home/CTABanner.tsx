@@ -290,7 +290,7 @@ function BrowseLink() {
   const [hov, setHov] = useState(false);
   return (
     <Link
-      href="#properties"
+      href="/properties"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{

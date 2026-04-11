@@ -43,7 +43,7 @@ const fadeRight = {
 const STATS = [
   { value: '10K+', label: 'Deals Closed',       icon: Home },
   { value: '98%',  label: 'Client Satisfaction', icon: Award },
-  { value: '500+', label: 'Expert Agents',       icon: Users },
+  { value: '500+', label: 'Expert Executives',   icon: Users },
   { value: '15+',  label: 'Years of Excellence', icon: TrendingUp },
 ];
 
@@ -56,7 +56,7 @@ const VALUES = [
   {
     number: '02',
     title: 'Relentless Research',
-    description: 'We study every micro-market, every price movement, every neighbourhood shift. When you work with FIND, you have the most informed team in the room.',
+    description: 'We study every micro-market, every price movement, every neighbourhood shift. When you work with kingsquare, you have the most informed team in the room.',
   },
   {
     number: '03',
@@ -72,11 +72,18 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: 'Aryan Mehta',
-    role: 'Founder & CEO',
+    name: 'Vinayak Waghle',
+    role: 'CEO',
     specialty: 'Luxury Residential',
     deals: 1200,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+    image: '/vinayak.jpeg',
+  },
+  {
+    name: 'Rohan',
+    role: 'Co-founder',
+    specialty: 'Commercial Real Estate',
+    deals: 640,
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
   },
   {
     name: 'Priya Nair',
@@ -86,15 +93,8 @@ const TEAM = [
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
   },
   {
-    name: 'Rohan Desai',
-    role: 'Senior Agent',
-    specialty: 'Commercial Real Estate',
-    deals: 640,
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
-  },
-  {
     name: 'Kavya Shah',
-    role: 'Senior Agent',
+    role: 'Senior Executive',
     specialty: 'New Developments',
     deals: 510,
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80',
@@ -102,28 +102,28 @@ const TEAM = [
 ];
 
 const MILESTONES = [
-  { year: '2009', title: 'Founded', description: 'FIND was born in Naigaon with a vision to redefine luxury real estate through trust and precision.' },
+  { year: '2009', title: 'Founded', description: 'kingsquare was born in Naigaon with a vision to redefine luxury real estate through trust and precision.' },
   { year: '2013', title: 'First 1000 Deals', description: 'Reached our first thousand closed transactions, establishing ourselves as Naigaon\'s go-to luxury agency.' },
-  { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted agents.' },
+  { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted executives.' },
   { year: '2020', title: 'KingSquare AI Launch', description: 'Launched India\'s first AI-powered property concierge, transforming how clients discover their dream homes.' },
   { year: '2024', title: '10,000 Families Housed', description: 'Celebrated our ten-thousandth successful transaction — a milestone built on relationships, not transactions.' },
 ];
 
 const TESTIMONIALS = [
   {
-    quote: "FIND didn't just find us a home. They found us the neighbourhood we didn't know we needed. The attention to detail was unlike anything we've experienced.",
+    quote: "kingsquare didn't just find us a home. They found us the neighbourhood we didn't know we needed. The attention to detail was unlike anything we've experienced.",
     name: 'Riya & Aditya Kapoor',
     location: 'Naigaon East, Naigaon',
     image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=200&q=80',
   },
   {
-    quote: "As an investor, I needed a team that understood both the emotional and financial dimensions of real estate. FIND delivered on every front.",
+    quote: "As an investor, I needed a team that understood both the emotional and financial dimensions of real estate. kingsquare delivered on every front.",
     name: 'Suresh Malhotra',
     location: 'Commercial Investor, Delhi',
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80',
   },
   {
-    quote: "I've worked with agencies in Virar, Virar, and Singapore. The level of service FIND provides is genuinely world-class.",
+    quote: "I've worked with agencies in Virar, Virar, and Singapore. The level of service kingsquare provides is genuinely world-class.",
     name: 'Natasha Iyer',
     location: 'Juchandra, Naigaon',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80',
@@ -379,7 +379,7 @@ export default function AboutPage() {
           {/* Parallax watermark */}
           <motion.div style={{ y: heroWmY, position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '5vw', pointerEvents: 'none', zIndex: 1 }}>
             <span style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(80px, 16vw, 220px)', fontWeight: 900, color: 'rgba(255,255,255,0.04)', lineHeight: 1, userSelect: 'none', letterSpacing: '-0.03em' }}>
-              FIND
+              KINGSQUARE
             </span>
           </motion.div>
 
@@ -420,7 +420,7 @@ export default function AboutPage() {
               transition={{ duration: 0.9, delay: 0.55, ease: EASE }}
               style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 'clamp(14px, 1.4vw, 17px)', fontWeight: 300, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, maxWidth: 460, margin: '0 0 44px' }}
             >
-              We guide families, investors, and visionaries toward places that transform how they live. Founded in 2009, FIND has become India's most trusted name in luxury real estate.
+              We guide families, investors, and visionaries toward places that transform how they live. Founded in 2009, kingsquare has become India's most trusted name in luxury real estate.
             </motion.p>
 
             <motion.div
@@ -437,7 +437,7 @@ export default function AboutPage() {
               }}>
                 View Properties <ArrowRight size={13} />
               </Link>
-              <Link href="/contact" style={{
+              <Link href="#team" style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 padding: '14px 28px',
                 border: '1px solid rgba(255,255,255,0.25)',
@@ -482,7 +482,7 @@ export default function AboutPage() {
 
               {/* Left */}
               <div>
-                <SectionLabel delay={0}>Why FIND</SectionLabel>
+                <SectionLabel delay={0}>Why kingsquare</SectionLabel>
                 <motion.h2
                   custom={0.15} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                   style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 'clamp(32px, 4.5vw, 56px)', fontWeight: 700, color: '#0a0a0a', lineHeight: 1.05, letterSpacing: '-0.02em' }}
@@ -503,7 +503,7 @@ export default function AboutPage() {
                   custom={0.35} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                   style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 300, color: '#888880', lineHeight: 1.85 }}
                 >
-                  We help you move forward with clarity, confidence, and the right agent by your side. Whether you're buying your first home, scaling an investment portfolio, or simply seeking a change — FIND is built for this moment.
+                  We help you move forward with clarity, confidence, and the right executive by your side. Whether you're buying your first home, scaling an investment portfolio, or simply seeking a change — kingsquare is built for this moment.
                 </motion.p>
               </div>
 
@@ -515,7 +515,7 @@ export default function AboutPage() {
                 <div style={{ position: 'relative', aspectRatio: '4/5', overflow: 'hidden' }}>
                   <Image
                     src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&q=85"
-                    alt="FIND Real Estate Office"
+                    alt="kingsquare Real Estate Office"
                     fill className="object-cover"
                     sizes="(max-width: 768px) 100vw, 50vw"
                   />
@@ -576,7 +576,7 @@ export default function AboutPage() {
                   custom={0.28} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}
                   style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 300, color: '#888880', lineHeight: 1.8 }}
                 >
-                  Four principles guide every decision we make — from the agents we hire to the properties we recommend to the way we communicate.
+                  Four principles guide every decision we make — from the executives we hire to the properties we recommend to the way we communicate.
                 </motion.p>
               </div>
 
@@ -609,7 +609,7 @@ export default function AboutPage() {
         {/* ──────────────────────────────────────────────────────────────────────
             TEAM
         ────────────────────────────────────────────────────────────────────── */}
-        <section style={{ padding: 'clamp(80px, 10vw, 140px) clamp(24px, 5vw, 80px)', backgroundColor: '#f3f1ed', borderTop: '1px solid rgba(10,10,10,0.07)' }}>
+        <section id="team" style={{ padding: 'clamp(80px, 10vw, 140px) clamp(24px, 5vw, 80px)', backgroundColor: '#f3f1ed', borderTop: '1px solid rgba(10,10,10,0.07)' }}>
           <div style={{ maxWidth: 1280, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 24, marginBottom: 56 }}>
               <div>

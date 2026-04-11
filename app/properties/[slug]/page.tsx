@@ -252,7 +252,7 @@ export default function PropertyDetailPage(props: { params: Promise<{ slug: stri
                       <Calendar size={16} /> Schedule a Tour
                     </button>
                     <button onClick={() => openCallOptions()} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, padding: '16px', backgroundColor: 'transparent', color: '#0a0a0a', border: '1px solid #0a0a0a', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', fontWeight: 600, transition: 'all 0.2s', borderRadius: 4 }}>
-                      Contact Agent
+                      Contact Executive
                     </button>
                   </div>
                 </motion.div>

@@ -153,8 +153,8 @@ export function EnquiryForm() {
   const [formData, setFormData]     = useState({
     enquiryType:  '',
     propertyTypes: [] as string[],
-    budgetMin:    5000000,
-    budgetMax:    50000000,
+    budgetMin:    2000000,
+    budgetMax:    30000000,
     location:     '',
     name:         '',
     phone:        '',
@@ -311,7 +311,7 @@ export function EnquiryForm() {
                 {(['budgetMin', 'budgetMax'] as const).map((key) => (
                   <input
                     key={key}
-                    type="range" min="5000000" max="500000000" step="5000000"
+                    type="range" min="2000000" max="30000000" step="1000000"
                     value={formData[key]}
                     onChange={(e) => patch({ [key]: Number(e.target.value) })}
                     style={{ width: '100%', accentColor: gold }}

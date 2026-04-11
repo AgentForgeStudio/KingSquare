@@ -21,8 +21,8 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "KingSquare | Premium Real Estate",
-  description: "Find your dream luxury property with KingSquare. Expert agents, real guidance, and a clear path to your perfect home.",
-  keywords: ["luxury real estate", "premium properties", "estate agents", "home buying"],
+  description: "Find your dream luxury property with KingSquare. Expert executives, real guidance, and a clear path to your perfect home.",
+  keywords: ["luxury real estate", "premium properties", "estate executives", "home buying"],
 };
 
 export default function RootLayout({

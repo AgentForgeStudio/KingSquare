@@ -17,28 +17,28 @@ const sansFont = "'Helvetica Neue',Arial,sans-serif";
 
 const neighborhoods = [
   {
-    name: 'Bassein', city: 'Vasai', count: 124,
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=900&auto=format&fit=crop'
+    name: 'Lodha', city: 'Vasai', count: 124,
+    image: '/lodha.png'
   },
   {
-    name: 'Stella', city: 'Vasai', count: 87,
-    image: 'https://images.unsplash.com/photo-1613490908681-3e4b7b2fb0eb?q=80&w=900&auto=format&fit=crop'
+    name: 'Sunteck', city: 'Vasai', count: 87,
+    image: '/sunteck/Beach/1.png'
+  },  
+  {
+    name: 'Nakshtra', city: 'Vasai', count: 63,
+    image: '/Nakshtra/agast/1.png'
   },
   {
-    name: 'Tungareshwar', city: 'Vasai', count: 63,
-    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=900&auto=format&fit=crop'
+    name: 'Navkar', city: 'Virar', count: 156,
+    image: '/Navkar/city_phase/1.png'
   },
   {
-    name: 'Downtown', city: 'Virar', count: 156,
-    image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=900&auto=format&fit=crop'
+    name: 'Ornate', city: 'Vasai', count: 92,
+    image: '/Ornate/height/1.png'
   },
   {
-    name: 'Suncity', city: 'Vasai', count: 92,
-    image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=900&auto=format&fit=crop'
-  },
-  {
-    name: 'Arnala', city: 'Virar', count: 78,
-    image: 'https://images.unsplash.com/photo-1600607686527-6fb886090705?q=80&w=900&auto=format&fit=crop'
+    name: 'Suraksha', city: 'Virar', count: 78,
+    image: '/sur.png'
   },
 ];
 

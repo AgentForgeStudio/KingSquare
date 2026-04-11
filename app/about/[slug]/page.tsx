@@ -43,7 +43,7 @@ const fadeRight = {
 const STATS = [
   { value: '10K+', label: 'Deals Closed',       icon: Home },
   { value: '98%',  label: 'Client Satisfaction', icon: Award },
-  { value: '500+', label: 'Expert Agents',       icon: Users },
+  { value: '500+', label: 'Expert Executives',   icon: Users },
   { value: '15+',  label: 'Years of Excellence', icon: TrendingUp },
 ];
 
@@ -56,7 +56,7 @@ const VALUES = [
   {
     number: '02',
     title: 'Relentless Research',
-    description: 'We study every micro-market, every price movement, every neighbourhood shift. When you work with FIND, you have the most informed team in the room.',
+    description: 'We study every micro-market, every price movement, every neighbourhood shift. When you work with kingsquare, you have the most informed team in the room.',
   },
   {
     number: '03',
@@ -72,11 +72,18 @@ const VALUES = [
 
 const TEAM = [
   {
-    name: 'Aryan Mehta',
-    role: 'Founder & CEO',
+    name: 'Vinayak Waghle',
+    role: 'CEO',
     specialty: 'Luxury Residential',
     deals: 1200,
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80',
+    image: '/vinayak.jpeg',
+  },
+  {
+    name: 'Rohan',
+    role: 'Co-founder',
+    specialty: 'Commercial Real Estate',
+    deals: 640,
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
   },
   {
     name: 'Priya Nair',
@@ -86,15 +93,8 @@ const TEAM = [
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&q=80',
   },
   {
-    name: 'Rohan Desai',
-    role: 'Senior Agent',
-    specialty: 'Commercial Real Estate',
-    deals: 640,
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
-  },
-  {
     name: 'Kavya Shah',
-    role: 'Senior Agent',
+    role: 'Senior Executive',
     specialty: 'New Developments',
     deals: 510,
     image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80',
@@ -102,28 +102,28 @@ const TEAM = [
 ];
 
 const MILESTONES = [
-  { year: '2009', title: 'Founded', description: 'FIND was born in Naigaon with a vision to redefine luxury real estate through trust and precision.' },
+  { year: '2009', title: 'Founded', description: 'kingsquare was born in Naigaon with a vision to redefine luxury real estate through trust and precision.' },
   { year: '2013', title: 'First 1000 Deals', description: 'Reached our first thousand closed transactions, establishing ourselves as Naigaon\'s go-to luxury agency.' },
-  { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted agents.' },
+  { year: '2017', title: 'National Expansion', description: 'Extended operations to Delhi, Bangalore, and Hyderabad with a network of 200+ vetted executives.' },
   { year: '2020', title: 'KingSquare AI Launch', description: 'Launched India\'s first AI-powered property concierge, transforming how clients discover their dream homes.' },
   { year: '2024', title: '10,000 Families Housed', description: 'Celebrated our ten-thousandth successful transaction — a milestone built on relationships, not transactions.' },
 ];
 
 const TESTIMONIALS = [
   {
-    quote: "FIND didn't just find us a home. They found us the neighbourhood we didn't know we needed. The attention to detail was unlike anything we've experienced.",
+    quote: "kingsquare didn't just find us a home. They found us the neighbourhood we didn't know we needed. The attention to detail was unlike anything we've experienced.",
     name: 'Riya & Aditya Kapoor',
     location: 'Naigaon East, Naigaon',
     image: 'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=200&q=80',
   },
   {
-    quote: "As an investor, I needed a team that understood both the emotional and financial dimensions of real estate. FIND delivered on every front.",
+    quote: "As an investor, I needed a team that understood both the emotional and financial dimensions of real estate. kingsquare delivered on every front.",
     name: 'Suresh Malhotra',
     location: 'Commercial Investor, Delhi',
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&q=80',
   },
   {
-    quote: "I've worked with agencies in Virar, Virar, and Singapore. The level of service FIND provides is genuinely world-class.",
+    quote: "I've worked with agencies in Virar, Virar, and Singapore. The level of service kingsquare provides is genuinely world-class.",
     name: 'Natasha Iyer',
     location: 'Juchandra, Naigaon',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&q=80',

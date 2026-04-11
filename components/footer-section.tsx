@@ -54,7 +54,7 @@ const sans  = "'Helvetica Neue',Arial,sans-serif";
 // ── Data ───────────────────────────────────────────────────────
 const sections = [
   { label: 'Estates', links: ['Luxury Villas','Penthouses','Private Islands','New Developments'] },
-  { label: 'Company', links: ['About KingSquare','Our Agents','Press & Media','Careers'] },
+  { label: 'Company', links: ['About kingsquare','Our Executives','Press & Media','Careers'] },
   { label: 'Support', links: ['Contact Us','Concierge Services','Privacy Policy','Terms of Service'] },
 ];
 const socials = [
@@ -95,7 +95,7 @@ function FooterLink({ children }: { children: string }) {
 // ── SocialBtn ──────────────────────────────────────────────────
 function SocialBtn({ Icon, label, href }: { Icon: () => JSX.Element; label: string; href: string }) {
   const [hov, setHov] = useState(false);
-  return (
+  return (   
     <motion.a href={href} aria-label={label}
       onHoverStart={() => setHov(true)} onHoverEnd={() => setHov(false)}
       whileTap={{ scale: 0.93 }}

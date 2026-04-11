@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Home, Star, Calendar, Users, Search, Handshake, Key, Quote } from "lucide-react";
 import MenuDemo from "@/components/MenuDemo"
+import { useCallStore } from "@/store/callStore";
 
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
@@ -55,7 +56,7 @@ const stats = [
   { value: 2500, suffix: "+", label: "Luxury Properties", icon: Home },
   { value: 98, suffix: "%", label: "Client Satisfaction", icon: Star },
   { value: 15, suffix: "+", label: "Years Experience", icon: Calendar },
-  { value: 500, suffix: "+", label: "Expert Agents", icon: Users },
+  { value: 500, suffix: "+", label: "Expert Executives", icon: Users },
 ];
 
 const steps = [
@@ -283,7 +284,7 @@ function StatsSection() {
         <div className="stats-flex" style={{ display: "flex", border: "1px solid #e5e5e5" }}>
           {stats.map((stat, i) => <StatCard key={stat.label} stat={stat} index={i} isLast={i === stats.length - 1} />)}
         </div>
-        <CTAStrip quote="Numbers that speak for themselves." label="Explore Properties" href="#properties" />
+        <CTAStrip quote="Numbers that speak for themselves." label="Explore Properties" href="/properties" />
       </div>
     </section>
   );
@@ -294,6 +295,8 @@ function ProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const wmY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const openCallOptions = useCallStore((s) => s.openCallOptions);
+
   return (
     <section ref={sectionRef} style={{ position: "relative" as const, padding: "112px 0", background: "#fff", overflow: "hidden", borderTop: "1px solid #e5e5e5" }}>
       <motion.div style={{ y: wmY, position: "absolute" as const, inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 0, pointerEvents: "none" as const, overflow: "hidden" }} aria-hidden>
@@ -317,7 +320,9 @@ function ProcessSection() {
         <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px" }}>
           {steps.map((step, i) => <StepCard key={step.number} step={step} index={i} isLast={i === steps.length - 1} />)}
         </div>
-        <CTAStrip quote="Ready to begin your journey?" label="Talk to an Executive" href="#contact" />
+        <div onClick={() => openCallOptions()} style={{ cursor: 'pointer' }}>
+          <CTAStrip quote="Ready to begin your journey?" label="Talk to an Executive" href="#" />
+        </div>
       </div>
     </section>
   );
@@ -351,7 +356,7 @@ function TestimonialsSection() {
         <div className="testi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "24px" }}>
           {testimonials.map((t, i) => <TestimonialCard key={t.name} testimonial={t} index={i} />)}
         </div>
-        <CTAStrip quote="Join our growing family of happy clients." label="Meet Our Agents" href="#agents" />
+        <CTAStrip quote="Join our growing family of happy clients." label="Meet Our Executives" href="/about" />
       </div>
     </section>
   );
