@@ -36,7 +36,7 @@ const QUICK_REPLIES = [
   { id: 'browse',        label: 'Browse Properties',     action: 'browse' },
   { id: 'neighborhoods', label: 'Explore Neighborhoods', action: 'neighborhoods' },
   { id: 'calculator',    label: 'Mortgage Calculator',   action: 'calculator' },
-  { id: 'agent',         label: 'Talk to an Agent',      action: 'agent' },
+  { id: 'agent',         label: 'Talk to an Executive',      action: 'agent' },
 ];
 
 // ── Icons ──────────────────────────────────────────────────────────────────────

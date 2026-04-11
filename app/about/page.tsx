@@ -798,7 +798,7 @@ export default function AboutPage() {
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11,
                 letterSpacing: '0.16em', textTransform: 'uppercase' as const, fontWeight: 600,
               }}>
-                Talk to an Agent <ArrowRight size={14} />
+                Talk to an Executive <ArrowRight size={14} />
               </Link>
             </motion.div>
           </div>

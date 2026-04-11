@@ -25,7 +25,7 @@ const QUICK_REPLIES = [
   { id: 'browse',        label: 'Browse Properties' },
   { id: 'neighborhoods', label: 'Explore Neighborhoods' },
   { id: 'calculator',    label: 'Mortgage Calculator' },
-  { id: 'agent',         label: 'Talk to an Agent' },
+  { id: 'agent',         label: 'Talk to an Executive' },
 ];
 
 // ─── Component ─────────────────────────────────────────────────────────────────

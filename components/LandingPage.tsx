@@ -66,10 +66,10 @@ const steps = [
 ];
 
 const testimonials = [
-  { name: "Rajiv Mehta", role: "Tech Entrepreneur", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop", content: "FIND Estates found us the perfect penthouse in Naigaon within two weeks. Their attention to our specific requirements was remarkable. The entire process was seamless.", rating: 5, property: "Oceanfront Penthouse, Naigaon" },
-  { name: "Priya Kapoor", role: "Investment Banker", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop", content: "As someone who values discretion and efficiency, FIND Estates exceeded my expectations. Their market knowledge and negotiation skills saved us both time and money.", rating: 5, property: "Vasai Sky Penthouse" },
-  { name: "Arjun Shah", role: "Film Producer", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop", content: "The team at FIND went above and beyond for our family estate in Vasai. Their understanding of luxury lifestyle needs is unmatched. Truly world-class service.", rating: 5, property: "Beachfront Villa, Vasai" },
-  { name: "Sarah Mitchell", role: "CEO, Mitchell Group", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop", content: "Investing in Virar property through FIND Estates was the best decision. Their international network and local expertise made a complex process feel effortless.", rating: 5, property: "Virar West Residence" },
+  { name: "Rajiv Mehta", role: "Tech Entrepreneur", photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop", content: "kingsquare Estates found us the perfect penthouse in Naigaon within two weeks. Their attention to our specific requirements was remarkable. The entire process was seamless.", rating: 5, property: "Oceanfront Penthouse, Naigaon" },
+  { name: "Priya Kapoor", role: "Investment Banker", photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop", content: "As someone who values discretion and efficiency, kingsquare Estates exceeded my expectations. Their market knowledge and negotiation skills saved us both time and money.", rating: 5, property: "Vasai Sky Penthouse" },
+  { name: "Arjun Shah", role: "Film Producer", photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop", content: "The team at kingsquare went above and beyond for our family estate in Vasai. Their understanding of luxury lifestyle needs is unmatched. Truly world-class service.", rating: 5, property: "Beachfront Villa, Vasai" },
+  { name: "Sarah Mitchell", role: "CEO, Mitchell Group", photo: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop", content: "Investing in Virar property through kingsquare Estates was the best decision. Their international network and local expertise made a complex process feel effortless.", rating: 5, property: "Virar West Residence" },
 ];
 
 // ─── Animation Variants ────────────────────────────────────────────────────────
@@ -317,7 +317,7 @@ function ProcessSection() {
         <div className="steps-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "32px" }}>
           {steps.map((step, i) => <StepCard key={step.number} step={step} index={i} isLast={i === steps.length - 1} />)}
         </div>
-        <CTAStrip quote="Ready to begin your journey?" label="Talk to an Agent" href="#contact" />
+        <CTAStrip quote="Ready to begin your journey?" label="Talk to an Executive" href="#contact" />
       </div>
     </section>
   );
@@ -422,10 +422,17 @@ export default function LandingPage() {
         .nav-link:hover { opacity: 1; }
         .signin-btn { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 999px; padding: 10px 26px; font-size: 0.9rem; font-weight: 500; cursor: pointer; font-family: 'Inter', sans-serif; transition: background 0.2s, transform 0.15s, border-color 0.2s; }
         .signin-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.6); transform: scale(1.03); }
+        #hero-outline { user-select: none; }
 
         /* ── Stat card right borders ── */
         .stat-card { border-right: 1px solid #e5e5e5; }
         .stat-card-last { border-right: none; }
+
+        /* ── Desktop baseline adjustments for hero positioning ── */
+        @media (min-width: 1025px) {
+          #hero-outline { top: 40% !important; }
+          #hero-copy { top: 47% !important; }
+        }
 
         /* ── Tablet: 769–1024px ── */
         @media (max-width: 1024px) {
@@ -433,12 +440,16 @@ export default function LandingPage() {
           .step-connector { display: none !important; }
           .section-hdr { grid-template-columns: 1fr !important; }
           .section-hdr-p { text-align: left !important; max-width: 100% !important; }
+          #hero-outline { top: 38% !important; font-size: clamp(4rem, 20vw, 16rem) !important; }
+          #hero-copy { top: 46% !important; }
         }
 
         /* ── Mobile: ≤768px ── */
         @media (max-width: 768px) {
           .section-inner { padding: 0 20px !important; }
           .hero-nav-links { display: none !important; }
+          #hero-outline { top: 34% !important; font-size: clamp(3rem, 22vw, 14rem) !important; }
+          #hero-copy { top: 44% !important; }
 
           /* Stats stack vertically */
           .stats-flex { flex-direction: column !important; }
@@ -470,6 +481,8 @@ export default function LandingPage() {
         @media (max-width: 480px) {
           .hero-title { font-size: 11.5vw !important; line-height: 0.92 !important; }
           .hero-subtitle { font-size: 0.85rem !important; }
+          #hero-outline { top: 30% !important; font-size: clamp(2.6rem, 24vw, 12rem) !important; }
+          #hero-copy { top: 42% !important; }
         }
       `}</style>
 
@@ -477,7 +490,7 @@ export default function LandingPage() {
         <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", overflow: "hidden", backgroundColor: "#aec8df" }}>
           <div ref={skyRef} style={{ position: "absolute", inset: "-10% -5%", backgroundImage: `url(data:image/jpeg;base64,${CLOUD_IMG})`, backgroundSize: "cover", backgroundPosition: "center 18%", willChange: "transform", zIndex: 0, transformOrigin: "center top" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(160,200,235,0) 0%,rgba(160,200,235,0) 45%,rgba(180,215,242,.28) 75%,rgba(205,228,248,.5) 100%)", zIndex: 1, pointerEvents: "none" }} />
-          <div ref={outlineTextRef} style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(5rem,15vw,15rem)", fontWeight: 900, whiteSpace: "nowrap", WebkitTextStroke: "2px rgba(255,255,255,0.5)", color: "transparent", zIndex: 1, willChange: "transform", fontFamily: "'Inter',sans-serif", textTransform: "uppercase", pointerEvents: "none" }}>FIND Real Estate</div>
+          <div id="hero-outline" ref={outlineTextRef} style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(3rem,10vw,12rem)", fontWeight: 800, whiteSpace: "nowrap", color: "#fff", zIndex: 1, willChange: "transform", fontFamily: "'Inter',sans-serif", textTransform: "uppercase", pointerEvents: "none", letterSpacing: "-0.04em" }}>KINGSQUARE</div>
           <div ref={buildingRef} style={{ position: "absolute", bottom: 0, left: "50%", width: "100vw", transform: "translateX(-50%) scale(1)", transformOrigin: "center bottom", willChange: "transform", zIndex: 2, display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
             <img src={`data:image/png;base64,${BUILDING_IMG}`} alt="Luxury building" style={{ width: "100%", maxWidth: "1440px", height: "auto", objectFit: "contain", objectPosition: "center bottom", display: "block" }} />
           </div>
@@ -493,13 +506,10 @@ export default function LandingPage() {
           <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0) 20%,rgba(0,0,0,.4) 100%)", zIndex: 7, pointerEvents: "none" }} />
 
           {/* Hero Text */}
-          <div ref={textRef} style={{ position: "absolute", top: "14%", left: 0, right: 0, textAlign: "center", zIndex: 8, padding: "0 clamp(16px, 5vw, 80px)", willChange: "transform,opacity" }}>
-            <h1 className="hero-title" style={{ fontFamily: "'Playfair Display',serif", fontSize: "clamp(2.4rem,9vw,7.8rem)", fontWeight: 700, color: "#fff", lineHeight: 0.94, letterSpacing: "-0.01em", margin: "0 0 1.3rem 0", textShadow: "0 4px 40px rgba(0,0,0,.6)" }}>
-              KING SQUARE
-            </h1>
-            <p className="hero-subtitle" style={{ fontSize: "clamp(0.875rem,1.55vw,1.2rem)", color: "rgba(255,255,255,.9)", margin: "0 0 2.2rem 0", fontWeight: 400, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,.6)" }}>
+          <div id="hero-copy" ref={textRef} style={{ position: "absolute", top: "47%", left: 0, right: 0, textAlign: "center", zIndex: 8, padding: "0 clamp(16px, 5vw, 80px)", willChange: "transform,opacity" }}>
+            <p className="hero-subtitle" style={{ fontSize: "clamp(0.875rem,1.55vw,1.4rem)", color: "rgba(255,255,255,.95)", margin: "0", fontWeight: 400, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,.6)", maxWidth: "800px", marginInline: "auto" }}>
               <span style={{ fontWeight: 600, color: "#fff" }}>Your Kingdom. Your Address.</span>{" "}
-              <span>A clear path to find what's next.</span>
+              <span>A clear path to kingsquare what's next.</span>
             </p>
           </div>
         </div>
@@ -519,11 +529,11 @@ export default function LandingPage() {
           </div>
           <motion.h2 initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0.15}
             style={{ fontFamily: "'Playfair Display',serif", fontWeight: 700, fontSize: "clamp(2rem,4vw,3.2rem)", color: "#0a0a0a", letterSpacing: "-0.03em", marginBottom: "20px" }}>
-            Why FIND
+            Why kingsquare
           </motion.h2>
           <motion.p initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0.25}
             style={{ maxWidth: "560px", margin: "0 auto", color: "#737373", lineHeight: 1.85, fontSize: "1.05rem", fontFamily: "'Inter',sans-serif", fontWeight: 300 }}>
-            Your life's changing. Don't just find a place — find what's next.
+            Your life's changing. Don't just kingsquare a place — kingsquare what's next.
             We help you move forward with clarity, confidence, and the right agent by your side.
           </motion.p>
         </div>

@@ -108,7 +108,7 @@ export function MobileMenu({ isOpen, onClose, links, pathname }: MobileMenuProps
               className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl font-medium transition-all hover:bg-neutral-800 dark:hover:bg-neutral-100"
             >
               <Phone className="w-5 h-5" />
-              Talk to Agent
+              Talk to Executive
             </button>
           </div>
         </div>

@@ -621,7 +621,7 @@ export default function PropertiesPage() {
                 Can't find what you're looking for?
               </p>
               <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 10, fontFamily: "'DM Sans', sans-serif", fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', fontWeight: 600, color: '#0a0a0a' }}>
-                Talk to an Agent
+                Talk to an Executive
                 <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, border: '1px solid #0a0a0a', overflow: 'hidden' }}>
                   <ArrowRight size={14} />
                 </span>

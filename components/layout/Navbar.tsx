@@ -214,7 +214,7 @@ function MobileMenu({ open, pathname, onClose, onCall }: {
               }}
             >
               <PhoneCall size={12} />
-              Talk to Agent
+              Talk to Executive
             </motion.button>
           </motion.div>
         </>
@@ -328,17 +328,17 @@ export function Navbar() {
           ))}
         </div>
 
-        {/* ── Talk to Agent CTA (desktop) ── */}
+        {/* ── Talk to Executive CTA (desktop) ── */}
         <button className="ks-cta ks-desktop   " onClick={openCallOptions}>
           <PhoneCall size={14} />
-          <span className='font-bold '> Talk to Agent</span>
+          <span className='font-bold '> Talk to Executive</span>
         </button>
 
-        {/* ── Talk to Agent (mobile — compact) + hamburger ── */}
+        {/* ── Talk to Executive (mobile — compact) + hamburger ── */}
         <div className="ks-burger" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <button className="ks-cta font-bold ks-cta-mobile " onClick={openCallOptions}>
             <PhoneCall size={13} />
-            Talk to Agent
+            Talk to Executive
           </button>
           <Hamburger open={menuOpen} onClick={() => setMenuOpen(o => !o)} />
         </div>

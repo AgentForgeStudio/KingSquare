@@ -233,7 +233,7 @@ export function CTABanner({ openCallOptions, openScheduleModal }: CTABannerProps
               }}
             >
               <Phone size={14} />
-              Talk to an Agent
+              Talk to an Executive
             </button>
 
             {/* Secondary — outlined */}

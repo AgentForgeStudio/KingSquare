@@ -354,7 +354,7 @@ export function CallOptionsModal() {
                           <OptionCard
                             icon={Mic}
                             number="01"
-                            title="Talk to an Agent"
+                            title="Talk to an Executive"
                             description="Instant AI voice call with a real estate expert. Available 24 hours a day, every day of the year."
                             cta="Start Now"
                             delay={0.15}
