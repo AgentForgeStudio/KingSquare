@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Building2, Home, MessageCircle, Newspaper, Info, PhoneCall } from 'lucide-react';
+import { Building2, Home, MessageCircle, Info, PhoneCall } from 'lucide-react';
 import { useCallStore } from '@/store/callStore';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,7 +18,6 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/properties', label: 'Properties', icon: Building2 },
   { href: '/about', label: 'About', icon: Info },
-  { href: '/blog', label: 'Blog', icon: Newspaper },
   { href: '/contact', label: 'Contact', icon: MessageCircle },
 ] as const;
 

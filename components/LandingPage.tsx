@@ -430,8 +430,8 @@ export default function LandingPage() {
 
         /* ── Desktop baseline adjustments for hero positioning ── */
         @media (min-width: 1025px) {
-          #hero-outline { top: 40% !important; }
-          #hero-copy { top: 47% !important; }
+          #hero-outline { top: 38% !important; font-size: clamp(6rem, 16vw, 18rem) !important; opacity: 1; }
+          #hero-copy { top: 48% !important; }
         }
 
         /* ── Tablet: 769–1024px ── */
@@ -440,7 +440,7 @@ export default function LandingPage() {
           .step-connector { display: none !important; }
           .section-hdr { grid-template-columns: 1fr !important; }
           .section-hdr-p { text-align: left !important; max-width: 100% !important; }
-          #hero-outline { top: 38% !important; font-size: clamp(4rem, 20vw, 16rem) !important; }
+          #hero-outline { top: 35% !important; font-size: clamp(4rem, 20vw, 14rem) !important; opacity: 1; }
           #hero-copy { top: 46% !important; }
         }
 
@@ -448,8 +448,8 @@ export default function LandingPage() {
         @media (max-width: 768px) {
           .section-inner { padding: 0 20px !important; }
           .hero-nav-links { display: none !important; }
-          #hero-outline { top: 34% !important; font-size: clamp(3rem, 22vw, 14rem) !important; }
-          #hero-copy { top: 44% !important; }
+          #hero-outline { top: 34% !important; font-size: clamp(2.5rem, 18vw, 12rem) !important; width: 100%; text-align: center; opacity: 1; }
+          #hero-copy { top: 45% !important; }
 
           /* Stats stack vertically */
           .stats-flex { flex-direction: column !important; }
@@ -480,40 +480,248 @@ export default function LandingPage() {
         /* ── Small mobile: ≤480px ── */
         @media (max-width: 480px) {
           .hero-title { font-size: 11.5vw !important; line-height: 0.92 !important; }
-          .hero-subtitle { font-size: 0.85rem !important; }
-          #hero-outline { top: 30% !important; font-size: clamp(2.6rem, 24vw, 12rem) !important; }
-          #hero-copy { top: 42% !important; }
+          .hero-subtitle { font-size: 0.75rem !important; }
+          #hero-outline { top: 32% !important; font-size: clamp(2.2rem, 20vw, 10rem) !important; opacity: 1; }
+          #hero-copy { top: 44% !important; }
         }
       `}</style>
 
-      <div style={{ height: "280vh" }}>
-        <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", overflow: "hidden", backgroundColor: "#aec8df" }}>
-          <div ref={skyRef} style={{ position: "absolute", inset: "-10% -5%", backgroundImage: `url(data:image/jpeg;base64,${CLOUD_IMG})`, backgroundSize: "cover", backgroundPosition: "center 18%", willChange: "transform", zIndex: 0, transformOrigin: "center top" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(160,200,235,0) 0%,rgba(160,200,235,0) 45%,rgba(180,215,242,.28) 75%,rgba(205,228,248,.5) 100%)", zIndex: 1, pointerEvents: "none" }} />
-          <div id="hero-outline" ref={outlineTextRef} style={{ position: "absolute", top: "40%", left: "50%", transform: "translate(-50%,-50%)", fontSize: "clamp(3rem,10vw,12rem)", fontWeight: 800, whiteSpace: "nowrap", color: "#fff", zIndex: 1, willChange: "transform", fontFamily: "'Inter',sans-serif", textTransform: "uppercase", pointerEvents: "none", letterSpacing: "-0.04em" }}>KINGSQUARE</div>
-          <div ref={buildingRef} style={{ position: "absolute", bottom: 0, left: "50%", width: "100vw", transform: "translateX(-50%) scale(1)", transformOrigin: "center bottom", willChange: "transform", zIndex: 2, display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
-            <img src={`data:image/png;base64,${BUILDING_IMG}`} alt="Luxury building" style={{ width: "100%", maxWidth: "1440px", height: "auto", objectFit: "contain", objectPosition: "center bottom", display: "block" }} />
-          </div>
-          <div ref={cloudLRef} style={{ position: "absolute", left: "-20%", bottom: "2%", width: "65vw", minWidth: "400px", maxWidth: "900px", zIndex: 5, opacity: 0, transform: "translateX(-380px)", willChange: "transform,opacity", pointerEvents: "none" }}>
-            <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", transform: "scaleX(-1)", filter: "brightness(1.08) contrast(0.92)" }} />
-          </div>
-          <div ref={cloudRRef} style={{ position: "absolute", right: "-20%", bottom: "2%", width: "65vw", minWidth: "400px", maxWidth: "900px", zIndex: 5, opacity: 0, transform: "translateX(380px)", willChange: "transform,opacity", pointerEvents: "none" }}>
-            <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", filter: "brightness(1.08) contrast(0.92)" }} />
-          </div>
-          <div ref={cloudBtmRef} style={{ position: "absolute", bottom: "-10%", left: "50%", width: "160%", transform: "translateX(-50%) translateY(180px)", zIndex: 6, opacity: 0, willChange: "transform,opacity", pointerEvents: "none" }}>
-            <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", filter: "brightness(1.12) contrast(0.88)" }} />
-          </div>
-          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0) 20%,rgba(0,0,0,.4) 100%)", zIndex: 7, pointerEvents: "none" }} />
+    <div style={{ height: "280vh" }}>
+  <div style={{ position: "sticky", top: 0, height: "100vh", width: "100%", overflow: "hidden", backgroundColor: "#aec8df" }}>
 
-          {/* Hero Text */}
-          <div id="hero-copy" ref={textRef} style={{ position: "absolute", top: "47%", left: 0, right: 0, textAlign: "center", zIndex: 8, padding: "0 clamp(16px, 5vw, 80px)", willChange: "transform,opacity" }}>
-            <p className="hero-subtitle" style={{ fontSize: "clamp(0.875rem,1.55vw,1.4rem)", color: "rgba(255,255,255,.95)", margin: "0", fontWeight: 400, letterSpacing: "0.02em", textShadow: "0 2px 20px rgba(0,0,0,.6)", maxWidth: "800px", marginInline: "auto" }}>
-              <span style={{ fontWeight: 600, color: "#fff" }}>Your Kingdom. Your Address.</span>{" "}
-              <span>A clear path to kingsquare what's next.</span>
-            </p>
-          </div>
+    {/* Sky background */} 
+    <div ref={skyRef} style={{ position: "absolute", inset: "-10% -5%", backgroundImage: `url(data:image/jpeg;base64,${CLOUD_IMG})`, backgroundSize: "cover", backgroundPosition: "center 18%", willChange: "transform", zIndex: 0, transformOrigin: " top" }} />
+
+    {/* Sky gradient overlay */}
+    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg,rgba(160,200,235,0) 0%,rgba(160,200,235,0) 45%,rgba(180,215,242,.28) 75%,rgba(205,228,248,.5) 100%)", zIndex: 1, pointerEvents: "none" }} />
+    {/* Dark vignette so text pops */}
+    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 30%,rgba(0,0,0,0.08) 0%,rgba(0,0,0,0.55) 100%)", zIndex: 1, pointerEvents: "none" }} />
+
+    {/* KINGSQUARE outline text (animated by scroll) */}
+    {/* <div
+  id="hero-outline"
+  ref={outlineTextRef}
+  style={{
+    position: "absolute",
+    top: "52%",           // ← was 38%, now pushes it into the sky/building zone
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    fontSize: "clamp(3rem, 12vw, 18rem)",
+    fontWeight: 900,
+    whiteSpace: "nowrap",
+    color: "transparent",
+    WebkitTextStroke: "1px rgba(255,255,255,0.18)",
+    zIndex: 1,            // ← stays BEHIND building (zIndex 2) and clouds (zIndex 5,6)
+    opacity: 1,
+    willChange: "transform",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    textTransform: "uppercase",
+    pointerEvents: "none",
+    letterSpacing: "-0.04em",
+  }}
+>
+  KINGSQUARE
+</div>
+  */}
+
+    {/* Building */}
+    <div ref={buildingRef} style={{ position: "absolute", bottom: 0, left: "50%", width: "100vw", transform: "translateX(-50%) scale(1)", transformOrigin: "center bottom", willChange: "transform", zIndex: 2, display: "flex", justifyContent: "center", alignItems: "flex-end" }}>
+      <img src={`data:image/png;base64,${BUILDING_IMG}`} alt="Luxury building" style={{ width: "100%", maxWidth: "1440px", height: "auto", objectFit: "contain", objectPosition: "center bottom", display: "block" }} />
+    </div>
+
+    {/* Cloud Left */}
+    <div ref={cloudLRef} style={{ position: "absolute", left: "-20%", bottom: "2%", width: "65vw", minWidth: "400px", maxWidth: "900px", zIndex: 5, opacity: 0, transform: "translateX(-380px)", willChange: "transform,opacity", pointerEvents: "none" }}>
+      <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", transform: "scaleX(-1)", filter: "brightness(1.08) contrast(0.92)" }} />
+    </div>
+
+    {/* Cloud Right */}
+    <div ref={cloudRRef} style={{ position: "absolute", right: "-20%", bottom: "2%", width: "65vw", minWidth: "400px", maxWidth: "900px", zIndex: 5, opacity: 0, transform: "translateX(380px)", willChange: "transform,opacity", pointerEvents: "none" }}>
+      <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", filter: "brightness(1.08) contrast(0.92)" }} />
+    </div>
+
+    {/* Cloud Bottom */}
+    <div ref={cloudBtmRef} style={{ position: "absolute", bottom: "-10%", left: "50%", width: "160%", transform: "translateX(-50%) translateY(180px)", zIndex: 6, opacity: 0, willChange: "transform,opacity", pointerEvents: "none" }}>
+      <img src={`data:image/png;base64,${OVERLAY_IMG}`} alt="" style={{ width: "100%", height: "auto", display: "block", filter: "brightness(1.12) contrast(0.88)" }} />
+    </div>
+
+    {/* Final dark radial for depth */}
+    <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 50% 40%,rgba(0,0,0,0) 20%,rgba(0,0,0,.4) 100%)", zIndex: 7, pointerEvents: "none" }} />
+
+    {/* ── HERO TEXT ───────────────────────────────────────────────── */}
+    {/* ── EYEBROW — pinned to top of hero ─────────────────────────── */}
+<div style={{
+  position: "absolute",
+  top: "18px",          // ← distance from very top of the sticky container
+  left: 0,
+  right: 0,
+  textAlign: "center",
+  zIndex: 9,            // ← above everything
+  pointerEvents: "none",
+}}>
+  {/* <p style={{ */}
+    {/* fontSize: "clamp(0.5rem, 0.9vw, 0.7rem)",
+    fontWeight: 600,
+    letterSpacing: "0.32em",
+    textTransform: "uppercase",
+    color: "#C9A84C",
+    margin: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    textShadow: "0 2px 12px rgba(0,0,0,0.6)",
+    fontFamily: "'Montserrat', sans-serif", */}
+  {/* }}> */}
+    {/* <span style={{ display: "inline-block", width: 36, height: 1, background: "#C9A84C", opacity: 0.65 }} /> */}
+    {/* Est. Mumbai · Vasai · Naigaon · Virar */}
+    {/* <span style={{ display: "inline-block", width: 36, height: 1, background: "#C9A84C", opacity: 0.65 }} /> */}
+  {/* </p> */}
+</div>
+
+{/* ── HERO TEXT (eyebrow removed from here) ────────────────────── */}
+<div
+  id="hero-copy"
+  ref={textRef}
+  style={{
+    position: "absolute",
+    top: "44%",
+    left: 0,
+    right: 0,
+    textAlign: "center",
+    zIndex: 8,
+    padding: "0 clamp(16px, 5vw, 80px)",
+    willChange: "transform,opacity",
+    transform: "translateY(-50%)",
+  }}
+>
+
+  {/* Main headline — King */}
+  <h1 style={{
+    fontSize: "clamp(4rem, 14vw, 12rem)",
+    fontWeight: 900,
+    lineHeight: 0.85,
+    margin: "0",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    letterSpacing: "-0.03em",
+    color: "#ffffff",
+    textShadow: "0 4px 40px rgba(0,0,0,0.45)",
+    display: "block",
+  }}>
+    King
+  </h1>
+
+  {/* Main headline — Square (gold outline italic) */}
+  <h1 style={{
+    fontSize: "clamp(4rem, 14vw, 12rem)",
+    fontWeight: 700,
+    lineHeight: 0.9,
+    margin: "0 0 22px",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontStyle: "italic",
+    letterSpacing: "-0.03em",
+    color: "transparent",
+    WebkitTextStroke: "1.5px #C9A84C",
+    display: "block",
+    textShadow: "none",
+  }}>
+    Square
+  </h1>
+
+  {/* Tagline */}
+  <p style={{
+    fontSize: "clamp(1rem, 1.8vw, 1.5rem)",
+    fontFamily: "'Cormorant Garamond', Georgia, serif",
+    fontStyle: "italic",
+    fontWeight: 400,
+    color: "rgba(255,255,255,0.92)",
+    margin: "0 0 8px",
+    letterSpacing: "0.04em",
+    textShadow: "0 2px 20px rgba(0,0,0,0.6)",
+    maxWidth: 600,
+    marginInline: "auto",
+  }}>
+    <span style={{ fontWeight: 600, fontStyle: "normal", color: "#fff" }}>Your Kingdom. Your Address.</span>
+  </p>
+
+  {/* Sub line */}
+  <p style={{
+    fontSize: "clamp(0.55rem, 0.9vw, 0.72rem)",
+    fontWeight: 500,
+    letterSpacing: "0.2em",
+    textTransform: "uppercase",
+    color: "rgba(255,255,255,0.5)",
+    margin: "0 0 26px",
+    fontFamily: "'Montserrat', sans-serif",
+    textShadow: "0 2px 12px rgba(0,0,0,0.5)",
+  }}>
+    Premium verified properties · Zero brokerage · Guaranteed bottom-rate pricing
+  </p>
+
+  {/* Gold vertical divider */}
+  <div style={{
+    width: 1,
+    height: 44,
+    background: "linear-gradient(to bottom, transparent, #C9A84C, transparent)",
+    margin: "0 auto 26px",
+  }} />
+
+  {/* Trust stats bar */}
+  {/* <div style={{
+    display: "inline-flex",
+    alignItems: "stretch",
+    border: "0.5px solid rgba(201,168,76,0.35)",
+    background: "rgba(0,0,0,0.32)",
+    backdropFilter: "blur(10px)",
+    WebkitBackdropFilter: "blur(10px)",
+    borderRadius: 2,
+    overflow: "hidden",
+    marginBottom: 20,
+  }}>
+    {[
+      { val: "0%",   label: "No Brokerage"     },
+      { val: "4.9★", label: "Client Rating"     },
+      { val: "500+", label: "Families Placed"   },
+      { val: "13+",  label: "Verified Projects" },
+    ].map((item, i) => (
+      <div key={i} style={{
+        padding: "14px clamp(14px, 2.5vw, 28px)",
+        borderRight: i < 3 ? "0.5px solid rgba(201,168,76,0.2)" : "none",
+        textAlign: "center",
+        minWidth: "clamp(64px, 10vw, 100px)",
+      }}>
+        <div style={{
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
+          fontSize: "clamp(1.1rem, 2vw, 1.6rem)",
+          fontWeight: 700,
+          color: "#C9A84C",
+          lineHeight: 1,
+          marginBottom: 5,
+        }}>
+          {item.val}
+        </div>
+        <div style={{
+          fontSize: "clamp(0.45rem, 0.7vw, 0.6rem)",
+          fontWeight: 600,
+          letterSpacing: "0.16em",
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.42)",
+          fontFamily: "'Montserrat', sans-serif",
+          lineHeight: 1.4,
+        }}>
+          {item.label}
         </div>
       </div>
+    ))}
+  </div> */}
+
+  {/* Badge pills */}
+ 
+
+</div>
+    {/* ── END HERO TEXT ─────────────────────────────────────────── */}
+
+  </div>
+</div>
 
       {/* Page content */}
       <div style={{ position: "relative", zIndex: 20, marginTop: "-100vh", background: "#fff" }}>
