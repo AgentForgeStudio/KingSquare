@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn(inter.variable, playfair.variable, "font-sans", geist.variable, "dark")}>
+    <html lang="en" data-scroll-behavior="smooth" className={cn(inter.variable, playfair.variable, "font-sans", geist.variable, "dark")}>
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
       </head>
