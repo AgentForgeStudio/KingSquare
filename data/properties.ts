@@ -227,3 +227,15 @@ export const properties: Property[] = [
     tags: ['Vasai','Modern','Beachfront'],
   },
 ];
+
+export const getFeaturedProperties = (): Property[] => {
+  return properties.filter((p) => p.featured);
+};
+
+export const getPropertyBySlug = (slug: string): Property | undefined => {
+  return properties.find((p) => p.slug === slug);
+};
+
+export const getPropertyById = (id: string): Property | undefined => {
+  return properties.find((p) => p.id === id);
+};
